@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #D9531E;
+  --primary-hover: #C24412;
+  --primary-light: #FFF5EB;
+  --forest-green: #173B35;
+  --teal-accent: #287A68;
+  --background: #F8F9FA;
+  --card-bg: #FFFFFF;
+  --text-main: #1E293B;
+  --text-muted: #64748B;
+  --border-color: #E2E8F0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Number display polish */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Print styling for reports */
+@media print {
+  aside, nav, button, .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

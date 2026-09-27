@@ -1,0 +1,277 @@
+CimCim Egg
+PRODUCT REQUIREMENTS DOCUMENT
+Sistem Manajemen Usaha Ayam Petelur & Bagi Hasil
+Versi 1.0  |  27 September 2026Platform: Web responsif (Vercel)Skema kemitraan: 2 mitra, kepemilikan/bagi hasil 50:50
+
+1. Ringkasan Produk
+CimCim Egg adalah aplikasi web internal untuk mencatat dan memantau operasional usaha ternak ayam petelur oleh dua mitra. Aplikasi menyatukan pencatatan modal awal, pembelian aset dan kebutuhan ternak, produksi serta penjualan telur, pengeluaran harian, arus kas, dan perhitungan pembagian hasil bulanan secara transparan. Aplikasi harus nyaman digunakan dari desktop maupun ponsel.
+2. Tujuan & Indikator Keberhasilan
+Menyediakan satu sumber data yang rapi untuk seluruh transaksi usaha CimCim Egg.
+Memisahkan modal awal, aset/inventaris, biaya operasional, pendapatan, dan penarikan/pembagian hasil.
+Menghitung laba bersih bulanan berdasarkan aturan yang disepakati kedua mitra dan membaginya 50:50.
+Memudahkan rekonsiliasi kas, pemeriksaan bukti transaksi, dan penelusuran perubahan data.
+Mengurangi kesalahan input melalui validasi, konfirmasi, dan ringkasan otomatis.
+Indikator keberhasilan
+Indikator
+Target awal
+Transaksi tercatat
+100% transaksi usaha yang disepakati masuk ke aplikasi
+Akurasi laporan
+Total laporan sesuai dengan transaksi sumber dan saldo kas
+Perhitungan bagi hasil
+Rumus transparan, dapat ditinjau dan dikonfirmasi kedua mitra
+Responsif
+Tampilan usable pada ponsel, tablet, dan desktop
+Keamanan
+Akses berbasis autentikasi, otorisasi server-side, audit log, dan backup teruji
+
+3. Pengguna & Hak Akses
+Peran
+Hak akses
+Mitra A (50%)
+Melihat dashboard/laporan; membuat dan mengubah transaksi sesuai status; mengunggah bukti; meninjau dan menyetujui laporan bulanan; melihat audit log yang relevan.
+Mitra B (50%)
+Hak setara dengan Mitra A. Tidak ada hak istimewa sepihak untuk mengubah porsi bagi hasil.
+Admin teknis (opsional)
+Pengelolaan teknis akun/konfigurasi. Tidak otomatis berhak menyetujui laporan atau mengubah transaksi keuangan tanpa jejak audit.
+
+Prinsip: kedua mitra memiliki akses setara. Perubahan skema 50:50, penguncian laporan, dan koreksi transaksi yang telah disetujui memerlukan persetujuan kedua mitra.
+4. Ruang Lingkup Fitur
+4.1 Login & Keamanan Akun
+Halaman login dengan email dan kata sandi; opsi magic link atau MFA dapat ditambahkan bila provider mendukung.
+Lupa/reset kata sandi melalui alur aman, sesi terkelola, logout, serta pembatasan percobaan login.
+Undangan pengguna hanya untuk dua mitra yang terdaftar; pendaftaran publik dinonaktifkan.
+Halaman profil: nama, email, status akun, dan pengaturan keamanan.
+4.2 Dashboard
+Kartu ringkasan periode: total penjualan telur, total biaya operasional, laba bersih sementara, saldo kas, jumlah telur terjual, dan estimasi bagian masing-masing mitra.
+Grafik tren pendapatan dan pengeluaran per bulan serta ringkasan produksi/penjualan telur.
+Daftar transaksi terbaru, pengeluaran terbesar, pengingat stok pakan (jika stok diaktifkan), dan status laporan bulan berjalan.
+Filter rentang tanggal, kategori, dan status laporan; nilai rupiah ditampilkan dalam format IDR.
+4.3 Modal Awal & Setoran Mitra
+Catat setoran awal masing-masing mitra: tanggal, nama mitra, nominal, metode, keterangan, dan bukti transfer.
+Tampilkan total modal awal, akumulasi setoran per mitra, dan selisih setoran.
+Modal awal dipisahkan dari pendapatan penjualan dan tidak dihitung sebagai laba.
+Dukungan pencatatan setoran tambahan/penarikan modal dengan kategori tersendiri dan persetujuan kedua mitra.
+4.4 Barang, Aset & Inventaris
+Daftar pembelian ayam, kandang, tempat pakan/minum, alat, vitamin/obat, pakan, kemasan, dan kebutuhan lainnya.
+Kolom: nama barang, kategori, jumlah, satuan, harga satuan, total, tanggal beli, pemasok, metode pembayaran, penanggung biaya, lokasi, kondisi, bukti, dan catatan.
+Ayam dan kandang dapat dicatat sebagai aset/inventaris; pakan dan barang habis pakai dicatat sebagai persediaan/biaya sesuai kebijakan pembukuan.
+Riwayat perubahan jumlah/stok opsional untuk pakan, vitamin, dan kemasan; peringatan stok minimum bila modul stok diaktifkan.
+Impor/ekspor CSV untuk daftar barang dan transaksi.
+4.5 Pemasukan & Penjualan Telur
+Pencatatan penjualan per transaksi: tanggal, pelanggan, jenis/ukuran telur (opsional), kuantitas (butir/kg/tray), harga satuan, diskon, total, metode pembayaran, status pembayaran, dan bukti.
+Pencatatan pendapatan lain seperti penjualan ayam afkir/kotoran atau pendapatan sampingan dengan kategori terpisah.
+Status pembayaran: lunas, sebagian, belum dibayar; pencatatan piutang dan pelunasan.
+Laporan kuantitas telur dan omzet berdasarkan hari, bulan, pelanggan, dan jenis produk.
+4.6 Pengeluaran
+Kategori standar: pakan, pembelian ayam, kandang/peralatan, vitamin/obat, listrik/air, tenaga kerja, transportasi, kemasan, perawatan, biaya administrasi, dan lain-lain.
+Kolom: tanggal, kategori, uraian, pemasok, jumlah, satuan, harga satuan, total, metode pembayaran, sumber dana/mitra pembayar, bukti, dan catatan.
+Pisahkan biaya operasional rutin dari pembelian aset/modal dan pengeluaran pribadi/penarikan mitra.
+Dukung pengeluaran berulang sebagai pengingat atau draft, bukan transaksi otomatis tanpa konfirmasi.
+4.7 Laporan Bulanan & Bagi Hasil 50:50
+Periode default adalah satu bulan kalender (tanggal 1 sampai akhir bulan). Sistem menghitung laporan bulanan dari transaksi yang telah diverifikasi. Nilai yang ditampilkan adalah draf sampai kedua mitra menyetujui dan mengunci laporan.
+Rumus yang diusulkan
+Pendapatan Bersih Operasional = Pendapatan Usaha Terealisasi − Biaya Operasional yang Disepakati
+Laba yang Dapat Dibagikan = Pendapatan Bersih Operasional − Cadangan/biaya lain yang disepakati − Kerugian periode sebelumnya (jika disepakati)
+Bagian Mitra A = Laba yang Dapat Dibagikan × 50%
+Bagian Mitra B = Laba yang Dapat Dibagikan × 50%
+Catatan penting: pembelian ayam, kandang, dan peralatan tidak otomatis diperlakukan sebagai biaya bulanan penuh. Kedua mitra perlu menetapkan apakah pembelian tersebut merupakan tambahan modal/aset, biaya langsung, atau dialokasikan melalui penyusutan. Modal awal bukan pendapatan. Jika hasil bersih negatif, sistem mencatat rugi dan tidak menghasilkan pembagian laba positif.
+Alur penutupan bulan
+Sistem membuat draf laporan dengan daftar pendapatan, biaya, transaksi belum lunas, koreksi, dan saldo kas.
+Mitra A dan Mitra B meninjau transaksi dan melampirkan catatan koreksi bila diperlukan.
+Kedua mitra memberikan persetujuan digital (nama akun, waktu, versi laporan, dan ringkasan yang disetujui).
+Setelah disetujui keduanya, laporan dikunci. Perubahan hanya melalui jurnal koreksi yang tercatat dan memerlukan persetujuan bersama.
+Pembayaran bagi hasil dicatat sebagai transaksi distribusi laba terpisah agar tidak mengurangi laba periode yang sama dua kali.
+5. Navigasi & Halaman
+Menu
+Isi utama
+Login
+Masuk, lupa kata sandi, keamanan akun
+Dashboard
+KPI, grafik, transaksi terbaru, status laporan
+Transaksi
+Pemasukan, penjualan telur, pengeluaran, filter dan pencarian
+Modal & Mitra
+Setoran modal, kontribusi tiap mitra, penarikan
+Barang & Inventaris
+Daftar barang/aset, pembelian, stok opsional
+Laporan
+Laporan laba-rugi, arus kas, penjualan, pengeluaran, modal, bagi hasil
+Penutupan Bulanan
+Review, persetujuan dua mitra, penguncian laporan
+Pengaturan
+Profil mitra, kategori, periode, aturan pembagian, ekspor
+
+Model berikut dipetakan ke tab-tab spreadsheet. Gunakan header tetap, ID unik per baris, timestamp created_at/updated_at, dan relasi antar-tab melalui ID, bukan nama tampilan.
+6. Model Data (Konseptual)
+Entitas
+Atribut penting
+users
+id, name, email, auth_provider_id, status, created_at
+partnerships
+id, business_name, currency, timezone, created_at
+partnership_members
+id, partnership_id, user_id, share_percent, role, status
+capital_contributions
+id, partnership_id, member_id, amount, date, payment_method, evidence_url, notes
+transactions
+id, partnership_id, type, category_id, date, description, amount, payment_status, payer_member_id, created_by, status
+sales
+id, transaction_id, customer_name, product_type, quantity, unit, unit_price, discount, paid_amount
+expenses
+id, transaction_id, vendor, quantity, unit, unit_price, asset_classification
+inventory_items
+id, partnership_id, name, category, unit, current_quantity, min_quantity, status
+inventory_movements
+id, item_id, movement_type, quantity, date, related_transaction_id
+evidence_files
+id, transaction_id, storage_key, mime_type, size, uploaded_by
+monthly_reports
+id, partnership_id, period, revenue_total, expense_total, distributable_profit, status, version, locked_at
+report_approvals
+id, report_id, member_id, decision, approved_at, report_hash/version
+profit_distributions
+id, report_id, member_id, amount, payment_status, paid_at
+audit_logs
+id, partnership_id, actor_id, action, entity_type, entity_id, timestamp, change_summary
+
+7. Aturan Bisnis & Validasi
+Mata uang utama IDR; zona waktu Asia/Jakarta; format tanggal Indonesia.
+Nominal harus angka positif untuk pemasukan/pengeluaran; koreksi dilakukan melalui transaksi pembalik/koreksi, bukan menghapus jejak.
+Total transaksi dihitung server-side dari kuantitas, harga, diskon, dan biaya; jangan mempercayai total dari browser.
+Porsi bagi hasil default 50% dan 50%; total harus 100%. Perubahan harus disetujui kedua mitra dan berlaku mulai periode yang ditentukan.
+Laporan yang telah dikunci tidak dapat diedit langsung. Koreksi dibuat sebagai jurnal baru dan dicatat pada periode yang sesuai.
+Transaksi yang belum lunas ditampilkan terpisah dari kas masuk; laporan harus membedakan basis kas dan pendapatan yang sudah diperoleh.
+Setiap unggahan bukti memiliki batas ukuran/jenis file, nama objek acak, pemeriksaan otorisasi, dan akses privat.
+Semua waktu disimpan konsisten (UTC di backend) dan ditampilkan dalam zona Asia/Jakarta.
+8. Keamanan & Privasi (Prioritas Tinggi)
+Keamanan harus diterapkan berlapis. Targetnya adalah praktik secure-by-default, bukan klaim bahwa sistem kebal dari seluruh serangan.
+Autentikasi: gunakan penyedia autentikasi terkelola yang mendukung sesi aman; aktifkan MFA bila tersedia; cookie HttpOnly, Secure, SameSite; rotasi dan kedaluwarsa sesi.
+Otorisasi: cek keanggotaan partnership dan hak akses pada setiap request di server. Terapkan prinsip least privilege dan deny-by-default.
+Spreadsheet & akses data: spreadsheet hanya dapat diakses backend menggunakan service account/OAuth server-side dengan hak minimum. Jangan membagikan spreadsheet secara publik atau menaruh kredensial di frontend. Batasi akses file hanya kepada pihak yang perlu.
+Validasi: validasi schema di server, normalisasi input, prepared statements/ORM, batas panjang, dan penanganan error tanpa membocorkan detail internal.
+Proteksi web: HTTPS, security headers (CSP, HSTS, X-Content-Type-Options, Referrer-Policy, frame-ancestors), proteksi CSRF sesuai model autentikasi, rate limiting, dan perlindungan brute-force.
+Rahasia: simpan API keys dan database credentials di environment variables Vercel; pisahkan development/preview/production; rotasi rahasia berkala; jangan commit .env.
+File bukti: storage bucket privat, signed URL berumur pendek, validasi MIME dan ekstensi, batas ukuran, nama file acak, dan larangan eksekusi file.
+Audit: catat login penting, perubahan transaksi, perubahan kategori/aturan, persetujuan laporan, ekspor, dan penguncian; audit log tidak dapat diedit pengguna biasa.
+Backup & pemulihan: buat salinan spreadsheet secara berkala, batasi hak penghapusan/perubahan, simpan riwayat versi, dan uji pemulihan. Tentukan retensi serta RPO/RTO yang realistis sebelum produksi.
+Privasi: kumpulkan data seperlunya, batasi akses bukti, sediakan prosedur ekspor dan penghapusan sesuai kesepakatan/ketentuan yang berlaku.
+Kualitas: dependency scanning, secret scanning, lint/typecheck, pengujian otorisasi lintas akun, dan review sebelum deploy.
+9. Rekomendasi Arsitektur & Deployment
+Lapisan
+Rekomendasi
+Frontend
+Next.js + TypeScript, App Router, desain responsif, komponen aksesibel.
+Hosting
+Vercel untuk deployment web dan server-side functions/API routes.
+Sumber data utama
+Google Sheets (atau spreadsheet yang disepakati) sebagai sumber data utama MVP untuk transaksi, modal, inventaris, penjualan, pengeluaran, laporan, dan persetujuan.
+Integrasi spreadsheet
+Backend mengakses spreadsheet melalui Google Sheets API. Spreadsheet ID dan kredensial disimpan sebagai secrets/environment variables di Vercel; jangan pernah dikirim ke browser.
+Autentikasi & akses
+Login aman untuk dua mitra, pendaftaran publik dimatikan, dan otorisasi diperiksa pada setiap endpoint server.
+Lampiran bukti
+Gunakan penyimpanan file privat untuk bukti transaksi; spreadsheet menyimpan metadata dan referensi file privat.
+Backup & monitoring
+Backup spreadsheet berkala, riwayat versi, uji pemulihan, log terstruktur, error tracking, dan alert tanpa data sensitif.
+CI/CD
+Lint, typecheck, unit/integration tests, security scan, deploy preview, lalu production.
+
+Semua operasi sensitif—perhitungan, perubahan transaksi, persetujuan, ekspor, dan penguncian laporan—wajib melewati server-side authorization. Browser tidak boleh membaca/menulis spreadsheet secara langsung. Gunakan tab terstruktur (misalnya Settings, Mitra, Modal, Barang, Transaksi, Penjualan, Pengeluaran, Persetujuan, Distribusi, AuditLog), ID unik per baris, validasi kolom, serta aturan pencatatan yang terdokumentasi. Spreadsheet cocok untuk MVP bervolume terbatas, tetapi bukan database transaksional; antisipasi benturan penulisan, kuota API, dan kebutuhan migrasi jika skala meningkat.
+10. UI/UX & Design Direction
+Arah visual: dashboard keuangan modern yang tenang, rapi, dan fungsional; hindari gradien dekoratif berlebihan, kartu berulang tanpa hierarki, ikon acak, dan elemen yang terlihat seperti template generik.
+Elemen
+Spesifikasi
+Palet warna
+Forest green #173B35 (utama), teal #287A68 (aksen), off-white #F7F8F5 (latar), putih #FFFFFF (permukaan), charcoal #2D3741 (teks), amber #D99A32 (peringatan), merah #B94A48 (error).
+Tipografi
+Sans-serif modern (Inter/Aptos atau setara), hierarki jelas, angka finansial mudah dibaca.
+Layout
+Sidebar pada desktop; bottom navigation atau drawer pada mobile; konten utama dengan ruang napas konsisten.
+Komponen
+KPI cards secukupnya, tabel dengan filter, form berkelompok, badge status, dialog konfirmasi, empty/loading/error states.
+Responsif
+Mobile-first; tabel menjadi kartu/kolom ringkas pada layar kecil; tombol dan input nyaman disentuh.
+Aksesibilitas
+Kontras memadai, fokus keyboard terlihat, label input, pesan error jelas, tidak mengandalkan warna saja.
+
+11. Laporan & Ekspor
+Laporan laba-rugi bulanan: pendapatan, biaya per kategori, laba/rugi, cadangan, dan laba yang dapat dibagikan.
+Laporan arus kas: saldo awal + kas masuk − kas keluar = saldo akhir; setoran modal dan distribusi laba ditampilkan terpisah.
+Laporan modal: kontribusi per mitra, aset yang dibeli, dan penarikan modal.
+Laporan penjualan: kuantitas, omzet, piutang, pembayaran diterima, dan tren bulanan.
+Laporan pengeluaran: kategori, pemasok, metode pembayaran, mitra pembayar, dan bukti.
+Laporan bagi hasil: dasar perhitungan, nilai 50:50, persetujuan kedua mitra, serta status pembayaran.
+Ekspor CSV dan PDF; ekspor dibatasi untuk anggota yang berwenang dan dicatat dalam audit log.
+12. Kriteria Penerimaan (Acceptance Criteria)
+Pengguna yang belum login tidak dapat membuka dashboard atau endpoint data.
+Mitra hanya dapat mengakses data partnership tempat ia menjadi anggota.
+Kedua mitra dapat mencatat dan meninjau modal, pembelian barang, penjualan, dan biaya dengan bukti.
+Dashboard memperbarui ringkasan berdasarkan transaksi valid dan filter periode.
+Modal awal tidak masuk ke pendapatan/laba usaha.
+Laporan menampilkan dengan jelas transaksi tunai, piutang, biaya operasional, aset/modal, dan distribusi laba.
+Laporan bulanan menghitung laba yang dapat dibagikan dan bagian 50:50 sesuai aturan yang disetujui.
+Laporan tidak dapat dikunci oleh satu mitra saja; persetujuan kedua mitra dibutuhkan.
+Transaksi yang sudah terkunci tidak bisa diubah tanpa jurnal koreksi dan jejak audit.
+Layout dapat digunakan pada viewport ponsel 360 px hingga desktop lebar tanpa overflow horizontal yang mengganggu.
+Tidak ada secret atau service-role key pada bundle client maupun repository.
+Tes otomatis mencakup kalkulasi keuangan, validasi, autentikasi, otorisasi, dan alur penutupan bulanan.
+Kriteria khusus spreadsheet: kredensial hanya berada di server, akses publik dinonaktifkan, penulisan bersamaan dan kuota API diuji, serta kegagalan layanan ditangani dengan pesan aman.
+13. Rencana Pengujian
+Jenis tes
+Skenario minimum
+Unit
+Rumus omzet, diskon, biaya, laba, pembagian 50:50, pembulatan rupiah, periode tanggal.
+Integrasi
+CRUD transaksi, unggah bukti, pembayaran sebagian, laporan dan persetujuan.
+Keamanan
+Akses tanpa login, IDOR, akses lintas partnership, privilege escalation, rate limit, upload file berbahaya.
+E2E
+Login → input modal → input pembelian → input penjualan/biaya → laporan → persetujuan dua mitra → distribusi.
+UI responsif
+Ponsel 360/390 px, tablet, desktop; navigasi, tabel, form, modal, dan state kosong/error.
+Pemulihan
+Uji backup dan restore database di lingkungan non-produksi.
+
+14. Tahapan Pengembangan
+Tahap
+Deliverable
+MVP 1 — Fondasi
+Auth, dua akun mitra, database, role/authorization, audit log, layout responsif.
+MVP 2 — Pencatatan
+Modal, barang/aset, pemasukan/penjualan telur, pengeluaran, bukti transaksi.
+MVP 3 — Dashboard & laporan
+Ringkasan, filter, arus kas, laba-rugi, laporan modal dan ekspor.
+MVP 4 — Bagi hasil
+Draf laporan bulanan, review, approval dua pihak, penguncian, distribusi.
+MVP 5 — Hardening & deploy
+Security testing, backup/restore, observability, UAT, deploy production Vercel.
+
+15. Di Luar Cakupan MVP
+Aplikasi mobile native Android/iOS.
+Integrasi otomatis dengan bank, payment gateway, atau marketplace.
+Payroll kompleks, perpajakan otomatis, dan akuntansi standar penuh.
+Prediksi produksi berbasis AI atau rekomendasi kesehatan ternak.
+Multi-kandang/multi-cabang kompleks (dapat dirancang sebagai pengembangan berikutnya).
+16. Asumsi & Keputusan yang Perlu Disepakati
+PRD ini menggunakan asumsi awal agar implementasi dapat dimulai. Sebelum laporan keuangan dipakai sebagai dasar pembagian uang nyata, kedua mitra perlu menyepakati hal berikut:
+Apakah pembagian 50:50 didasarkan pada laba setelah biaya operasional saja, atau setelah cadangan, penyusutan aset, dan kerugian sebelumnya.
+Perlakuan pembelian ayam, kandang, dan peralatan: modal/aset, biaya langsung, atau penyusutan.
+Apakah setoran modal awal kedua mitra harus sama nominal atau hanya dicatat terpisah dari porsi bagi hasil.
+Apakah laporan memakai basis kas, basis akrual, atau menampilkan keduanya.
+Saldo minimum/cadangan kas yang harus ditahan sebelum distribusi laba.
+Aturan penanganan transaksi terlambat, piutang tidak tertagih, kematian ayam, telur rusak, dan kerugian.
+Siapa yang boleh menginput transaksi dan tenggat persetujuan laporan bulanan.
+17. Glosarium
+Istilah
+Definisi
+Modal awal
+Dana yang disetor mitra untuk memulai usaha; bukan pendapatan penjualan.
+Aset/inventaris
+Barang berumur manfaat lebih dari satu periode, misalnya kandang atau peralatan.
+Biaya operasional
+Pengeluaran rutin untuk menjalankan usaha, misalnya pakan, vitamin, air, dan transportasi.
+Laba yang dapat dibagikan
+Nilai setelah pendapatan, biaya, dan penyesuaian/cadangan yang telah disepakati.
+Penutupan bulanan
+Proses review, persetujuan kedua mitra, dan penguncian laporan untuk satu periode.
