@@ -2,12 +2,6 @@ import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
-export interface GoogleSheetsConfig {
-  clientEmail?: string;
-  privateKey?: string;
-  spreadsheetId?: string;
-}
-
 export function getGoogleSheetsClient() {
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   let privateKey = process.env.GOOGLE_PRIVATE_KEY;
@@ -60,9 +54,8 @@ export async function initializeSheetTabs(): Promise<{ success: boolean; message
   const { sheets, spreadsheetId } = client;
 
   try {
-    // 1. Get existing sheets
     const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
-    const existingSheetTitles = spreadsheet.data.sheets?.map(s => s.properties?.title) || [];
+    const existingSheetTitles = spreadsheet.data.sheets?.map((s) => s.properties?.title) || [];
 
     const sheetsToCreate: string[] = [];
     for (const title of Object.keys(SHEET_SCHEMAS)) {
@@ -71,9 +64,8 @@ export async function initializeSheetTabs(): Promise<{ success: boolean; message
       }
     }
 
-    // 2. Add missing sheets
     if (sheetsToCreate.length > 0) {
-      const requests = sheetsToCreate.map(title => ({
+      const requests = sheetsToCreate.map((title) => ({
         addSheet: {
           properties: { title },
         },
@@ -84,7 +76,6 @@ export async function initializeSheetTabs(): Promise<{ success: boolean; message
       });
     }
 
-    // 3. Set headers for each sheet
     for (const [title, headers] of Object.entries(SHEET_SCHEMAS)) {
       await sheets.spreadsheets.values.update({
         spreadsheetId,
@@ -96,14 +87,34 @@ export async function initializeSheetTabs(): Promise<{ success: boolean; message
       });
     }
 
-    return { success: true, message: `Successfully initialized ${Object.keys(SHEET_SCHEMAS).length} sheet tabs.` };
+    return { success: true, message: `Berhasil menginisialisasi ${Object.keys(SHEET_SCHEMAS).length} tab pada Google Spreadsheet.` };
   } catch (error: any) {
-    return { success: false, message: error?.message || 'Error initializing spreadsheet tabs.' };
+    return { success: false, message: error?.message || 'Error saat inisialisasi tab spreadsheet.' };
   }
 }
 
 /**
- * Append row to a Google Sheet
+ * Read all rows from a Google Sheet tab
+ */
+export async function readSheetRows(tabName: keyof typeof SHEET_SCHEMAS): Promise<any[][] | null> {
+  const client = getGoogleSheetsClient();
+  if (!client) return null;
+
+  try {
+    const { sheets, spreadsheetId } = client;
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: `${tabName}!A2:Z`,
+    });
+    return response.data.values || [];
+  } catch (err: any) {
+    // Return null if sheet not found or disabled
+    return null;
+  }
+}
+
+/**
+ * Append row to a Google Sheet tab
  */
 export async function appendSheetRow(tabName: keyof typeof SHEET_SCHEMAS, rowValues: any[]): Promise<boolean> {
   const client = getGoogleSheetsClient();
@@ -122,6 +133,52 @@ export async function appendSheetRow(tabName: keyof typeof SHEET_SCHEMAS, rowVal
     return true;
   } catch (err) {
     console.error(`Error appending row to ${tabName}:`, err);
+    return false;
+  }
+}
+
+/**
+ * Delete a row by record ID (column A)
+ */
+export async function deleteSheetRowById(tabName: keyof typeof SHEET_SCHEMAS, id: string): Promise<boolean> {
+  const client = getGoogleSheetsClient();
+  if (!client) return false;
+
+  try {
+    const { sheets, spreadsheetId } = client;
+    const rows = await readSheetRows(tabName);
+    if (!rows) return false;
+
+    const rowIndex = rows.findIndex((row) => row[0] === id);
+    if (rowIndex === -1) return false;
+
+    const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
+    const sheetObj = spreadsheet.data.sheets?.find((s) => s.properties?.title === tabName);
+    const sheetId = sheetObj?.properties?.sheetId;
+
+    if (sheetId === undefined) return false;
+
+    // Row index in sheet starts at 1 (header is row 0, first data is row 1)
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId,
+                dimension: 'ROWS',
+                startIndex: rowIndex + 1,
+                endIndex: rowIndex + 2,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return true;
+  } catch (err) {
+    console.error(`Error deleting row from ${tabName}:`, err);
     return false;
   }
 }
