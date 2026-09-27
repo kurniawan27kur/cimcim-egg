@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CimCim Egg - Sistem Manajemen Usaha Ayam Petelur & Bagi Hasil',
+  title: 'CimCim Farm - Sistem Manajemen Usaha Ayam Petelur & Bagi Hasil',
   description:
     'Aplikasi manajemen usaha ternak ayam petelur, pencatatan produksi telur, pembukuan pengeluaran harian, dan pembagian hasil 50:50 dua mitra transparan.',
   icons: {

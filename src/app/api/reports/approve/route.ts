@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { approveMonthlyReport } from '@/lib/dataStore';
-import { verifyPartnerPin, PARTNERS_DB } from '@/lib/auth';
+import { verifyPartnerPin, getAllPartners } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -14,12 +14,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const partner = PARTNERS_DB.find((p) => p.id === partnerId);
+    const partners = await getAllPartners();
+    const partner = partners.find((p) => p.id === partnerId);
     if (!partner) {
       return NextResponse.json({ success: false, message: 'Mitra tidak ditemukan.' }, { status: 404 });
     }
 
-    const isValidPin = verifyPartnerPin(partnerId, pin);
+    const isValidPin = await verifyPartnerPin(partnerId, pin);
     if (!isValidPin) {
       return NextResponse.json(
         { success: false, message: 'PIN otorisasi digital salah. Silakan coba lagi.' },

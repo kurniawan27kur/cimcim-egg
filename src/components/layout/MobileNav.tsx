@@ -52,12 +52,10 @@ export default function MobileNav({ currentUser }: MobileNavProps) {
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100">
-              <svg className="w-4 h-4 fill-current text-orange-500" viewBox="0 0 24 24">
-                <path d="M12 2C8.5 2 6 5.5 6 9.5c0 2.2.8 4.2 2.2 5.6C7.5 16.5 6 18 6 20h12c0-2-1.5-3.5-2.2-4.9 1.4-1.4 2.2-3.4 2.2-5.6C18 5.5 15.5 2 12 2zm0 2.5c2.5 0 4 2.5 4 5s-1.5 5-4 5-4-2.5-4-5 1.5-5 4-5z" />
-              </svg>
+            <div className="w-7 h-7 rounded-lg overflow-hidden bg-orange-50 border border-orange-200 shrink-0">
+              <img src="/images/mascot.jpg" alt="CimCim Farm Mascot" className="w-full h-full object-cover" />
             </div>
-            <span className="font-bold text-base text-slate-900">CimCim Egg</span>
+            <span className="font-bold text-base text-slate-900">CimCim Farm</span>
           </div>
         </div>
 
@@ -88,15 +86,13 @@ export default function MobileNav({ currentUser }: MobileNavProps) {
         )}
       >
         <div className="p-4 flex items-center justify-between border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100">
-              <svg className="w-5 h-5 fill-current text-orange-500" viewBox="0 0 24 24">
-                <path d="M12 2C8.5 2 6 5.5 6 9.5c0 2.2.8 4.2 2.2 5.6C7.5 16.5 6 18 6 20h12c0-2-1.5-3.5-2.2-4.9 1.4-1.4 2.2-3.4 2.2-5.6C18 5.5 15.5 2 12 2zm0 2.5c2.5 0 4 2.5 4 5s-1.5 5-4 5-4-2.5-4-5 1.5-5 4-5z" />
-              </svg>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl overflow-hidden bg-orange-50 border border-orange-200 shrink-0">
+              <img src="/images/mascot.jpg" alt="CimCim Farm Mascot" className="w-full h-full object-cover" />
             </div>
             <div>
-              <h2 className="font-bold text-base text-slate-900 leading-tight">CimCim Egg</h2>
-              <p className="text-[11px] text-slate-500">Fresh Eggs, Better Days</p>
+              <h2 className="font-bold text-base text-slate-900 leading-tight">CimCim Farm</h2>
+              <p className="text-[11px] text-slate-500">Poultry & Profit Share</p>
             </div>
           </div>
           <button

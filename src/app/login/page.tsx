@@ -1,29 +1,44 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, KeyRound, Loader2, ShieldCheck, User } from 'lucide-react';
+import { Lock, Mail, KeyRound, Loader2, ShieldCheck, Eye, EyeOff, Sparkles } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('kurniawan@cimcim.com');
-  const [password, setPassword] = useState('password123');
-  const [pin, setPin] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [pin, setPin] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [authMode, setAuthMode] = useState<'password' | 'pin'>('password');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = async (e?: React.FormEvent, customPartnerId?: string) => {
-    if (e) e.preventDefault();
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      setError('Harap masukkan alamat email.');
+      return;
+    }
+
+    if (authMode === 'password' && !password) {
+      setError('Harap masukkan kata sandi.');
+      return;
+    }
+
+    if (authMode === 'pin' && !pin) {
+      setError('Harap masukkan 6-digit PIN otorisasi.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      const payload: any = customPartnerId
-        ? { partnerId: customPartnerId, password: 'password123' }
-        : authMode === 'password'
-        ? { email, password }
-        : { email, pin };
+      const payload = authMode === 'password'
+        ? { email: email.trim(), password }
+        : { email: email.trim(), pin: pin.trim() };
 
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -33,7 +48,7 @@ export default function LoginPage() {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Login gagal.');
+        throw new Error(data.message || 'Login gagal. Periksa kembali email dan kata sandi Anda.');
       }
 
       router.push('/');
@@ -46,40 +61,81 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col justify-center items-center p-4 sm:p-6">
-      <div className="w-full max-w-md space-y-6">
-        {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 shadow-sm border border-orange-200">
-            <svg className="w-8 h-8 fill-current text-[#D9531E]" viewBox="0 0 24 24">
-              <path d="M12 2C8.5 2 6 5.5 6 9.5c0 2.2.8 4.2 2.2 5.6C7.5 16.5 6 18 6 20h12c0-2-1.5-3.5-2.2-4.9 1.4-1.4 2.2-3.4 2.2-5.6C18 5.5 15.5 2 12 2zm0 2.5c2.5 0 4 2.5 4 5s-1.5 5-4 5-4-2.5-4-5 1.5-5 4-5z" />
-            </svg>
+    <div className="min-h-screen bg-[#F8F9FA] flex flex-col justify-center items-center p-4 sm:p-6 selection:bg-orange-100 selection:text-orange-900">
+      <div className="w-full max-w-[420px] space-y-6">
+        
+        {/* Mascot & Brand Header */}
+        <div className="flex flex-col items-center text-center space-y-3">
+          <div className="relative group">
+            {/* Ambient Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-amber-400/30 to-orange-500/30 rounded-full blur-lg opacity-70 group-hover:opacity-100 transition duration-500" />
+            
+            {/* Mascot Avatar */}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-gradient-to-b from-amber-50 to-orange-100/60 p-1 border-2 border-orange-200/80 shadow-md flex items-center justify-center">
+              <Image
+                src="/images/mascot.jpg"
+                alt="CimCim Farm Mascot"
+                width={120}
+                height={120}
+                className="w-full h-full object-cover rounded-full hover:scale-105 transition-transform duration-300"
+                priority
+              />
+            </div>
+
+            <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-xs border border-orange-100 text-xs">
+              🌾
+            </div>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">CimCim Egg</h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Sistem Manajemen Ternak Ayam Petelur & Bagi Hasil
-          </p>
+
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100/70 border border-orange-200/60 text-orange-800 text-[11px] font-bold tracking-wide uppercase mb-1">
+              <Sparkles className="w-3 h-3 text-orange-600" />
+              <span>CimCim Farm System</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              CimCim Farm
+            </h1>
+            <p className="text-xs text-slate-500 font-medium max-w-xs mx-auto mt-1">
+              Sistem Manajemen Peternakan Modern, Produksi Telur, & Transparansi Bagi Hasil
+            </p>
+          </div>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-lg space-y-5">
-          <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-900">Masuk Akun Mitra</h2>
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-xs font-semibold">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xl shadow-slate-200/40 space-y-5">
+          
+          {/* Header & Auth Mode Tabs */}
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">Masuk Akun Mitra</h2>
+              <p className="text-[11px] text-slate-400">Silakan otentikasi untuk melanjutkan</p>
+            </div>
+
+            <div className="flex items-center bg-slate-100/90 p-1 rounded-xl text-xs font-semibold">
               <button
                 type="button"
-                onClick={() => setAuthMode('password')}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  authMode === 'password' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500'
+                onClick={() => {
+                  setAuthMode('password');
+                  setError('');
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  authMode === 'password'
+                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Password
               </button>
               <button
                 type="button"
-                onClick={() => setAuthMode('pin')}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  authMode === 'pin' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500'
+                onClick={() => {
+                  setAuthMode('pin');
+                  setError('');
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  authMode === 'pin'
+                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 PIN
@@ -87,56 +143,67 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* Error Alert */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
-              {error}
+            <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-2xl flex items-start gap-2.5 animate-in fade-in duration-200">
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-600 mt-1.5 shrink-0" />
+              <span className="leading-relaxed">{error}</span>
             </div>
           )}
 
-          <form onSubmit={(e) => handleLogin(e)} className="space-y-4 text-xs">
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Email Mitra *</label>
+              <label className="block font-semibold text-slate-700 mb-1.5">Email Terdaftar *</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="kurniawan@cimcim.com"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  placeholder="nama@email.com"
+                  className="w-full bg-slate-50/70 hover:bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white transition-all font-medium"
                 />
               </div>
             </div>
 
             {authMode === 'password' ? (
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Kata Sandi *</label>
+                <label className="block font-semibold text-slate-700 mb-1.5">Kata Sandi *</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    placeholder="Masukkan kata sandi..."
+                    className="w-full bg-slate-50/70 hover:bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white transition-all font-medium"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-md"
+                    title={showPassword ? 'Sembunyikan' : 'Tampilkan'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
             ) : (
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">6-Digit PIN Otorisasi *</label>
+                <label className="block font-semibold text-slate-700 mb-1.5">6-Digit PIN Otorisasi *</label>
                 <div className="relative">
-                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="password"
                     maxLength={6}
                     required
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
-                    placeholder="123456"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-slate-900 font-mono tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    placeholder="••••••"
+                    className="w-full bg-slate-50/70 hover:bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 text-slate-900 placeholder:text-slate-300 font-mono tracking-widest text-center text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white transition-all font-bold"
                   />
                 </div>
               </div>
@@ -145,53 +212,36 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-[#D9531E] hover:bg-orange-700 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 px-4 bg-[#D9531E] hover:bg-orange-700 active:scale-[0.99] text-white font-bold rounded-xl transition-all shadow-md shadow-orange-600/20 flex items-center justify-center gap-2 disabled:opacity-50 mt-2 cursor-pointer"
             >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              <span>Masuk Sekarang</span>
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Memverifikasi Akun...</span>
+                </>
+              ) : (
+                <span>Masuk ke Dashboard</span>
+              )}
             </button>
           </form>
 
-          {/* Quick Demo Access Switcher */}
-          <div className="pt-3 border-t border-slate-100 space-y-2">
-            <p className="text-[11px] text-slate-400 font-semibold text-center uppercase tracking-wider">
-              Akses Cepat Mitra (Demo)
+          {/* Info note */}
+          <div className="pt-3 border-t border-slate-100 text-center">
+            <p className="text-[11px] text-slate-400">
+              Akun dikelola terpusat melalui lembar kerja Google Sheets <span className="font-semibold text-slate-600">Mitra</span>.
             </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('kurniawan@cimcim.com');
-                  setPassword('password123');
-                  handleLogin(undefined, 'partner-1');
-                }}
-                className="p-2.5 rounded-xl border border-orange-200 bg-orange-50/50 hover:bg-orange-100 text-left transition-colors"
-              >
-                <p className="font-bold text-slate-900 text-xs">Kurniawan</p>
-                <p className="text-[10px] text-orange-700">Mitra A (50%)</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('santoso@cimcim.com');
-                  setPassword('password123');
-                  handleLogin(undefined, 'partner-2');
-                }}
-                className="p-2.5 rounded-xl border border-sky-200 bg-sky-50/50 hover:bg-sky-100 text-left transition-colors"
-              >
-                <p className="font-bold text-slate-900 text-xs">Santoso</p>
-                <p className="text-[10px] text-sky-700">Mitra B (50%)</p>
-              </button>
-            </div>
           </div>
         </div>
 
         {/* Security badge footer */}
-        <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          <span>Sesi Terenkripsi & Sesuai Aturan Kemitraan PRD</span>
+        <div className="flex flex-col items-center justify-center gap-1 text-[11px] text-slate-400">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Sesi Terenkripsi Aman & Otomatis Tersinkron</span>
+          </div>
+          <p>© 2026 CimCim Farm. All rights reserved.</p>
         </div>
+
       </div>
     </div>
   );

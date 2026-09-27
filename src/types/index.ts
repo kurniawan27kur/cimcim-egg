@@ -1,4 +1,4 @@
-// CimCim Egg Data Types & Interfaces
+// CimCim Farm Data Types & Interfaces
 
 export type UserRole = 'OWNER' | 'PARTNER' | 'ADMIN';
 
@@ -12,6 +12,7 @@ export interface Partner {
   phone?: string;
   pin: string; // 6-digit PIN for confirmation/digital signature
   status: 'ACTIVE' | 'INACTIVE';
+  password?: string;
 }
 
 export type TransactionType = 'INCOME' | 'EXPENSE' | 'CAPITAL' | 'DISTRIBUTION';

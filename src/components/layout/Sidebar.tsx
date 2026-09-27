@@ -60,17 +60,15 @@ export default function Sidebar({ currentUser }: SidebarProps) {
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 min-h-screen shrink-0 select-none">
       {/* Brand Header */}
-      <div className="p-5 flex items-center gap-3 border-b border-slate-100">
-        <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100 shadow-sm">
-          <svg className="w-6 h-6 fill-current text-orange-500" viewBox="0 0 24 24">
-            <path d="M12 2C8.5 2 6 5.5 6 9.5c0 2.2.8 4.2 2.2 5.6C7.5 16.5 6 18 6 20h12c0-2-1.5-3.5-2.2-4.9 1.4-1.4 2.2-3.4 2.2-5.6C18 5.5 15.5 2 12 2zm0 2.5c2.5 0 4 2.5 4 5s-1.5 5-4 5-4-2.5-4-5 1.5-5 4-5z" />
-          </svg>
+      <div className="p-4 sm:p-5 flex items-center gap-3 border-b border-slate-100">
+        <div className="w-10 h-10 rounded-xl overflow-hidden bg-orange-50 border border-orange-200/80 shadow-2xs shrink-0 flex items-center justify-center">
+          <img src="/images/mascot.jpg" alt="CimCim Farm Mascot" className="w-full h-full object-cover" />
         </div>
         <div>
-          <h1 className="font-bold text-lg text-slate-900 leading-tight flex items-center gap-1">
-            CimCim Egg
+          <h1 className="font-bold text-base text-slate-900 leading-tight flex items-center gap-1">
+            CimCim Farm
           </h1>
-          <p className="text-xs text-slate-500 font-medium">Fresh Eggs, Better Days</p>
+          <p className="text-[11px] text-slate-500 font-medium">Poultry & Profit Share</p>
         </div>
       </div>
 

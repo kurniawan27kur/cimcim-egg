@@ -32,7 +32,7 @@ export function getGoogleSheetsClient() {
 }
 
 export const SHEET_SCHEMAS = {
-  Mitra: ['id', 'name', 'email', 'role', 'sharePercent', 'phone', 'status', 'updatedAt'],
+  Mitra: ['id', 'name', 'email', 'role', 'sharePercent', 'avatarColor', 'phone', 'pin', 'status', 'pass'],
   Penjualan: ['id', 'date', 'customerName', 'productType', 'quantity', 'unit', 'unitPrice', 'discount', 'totalAmount', 'paidAmount', 'paymentStatus', 'paymentMethod', 'notes', 'createdAt'],
   Pengeluaran: ['id', 'date', 'category', 'vendor', 'itemName', 'quantity', 'unit', 'unitPrice', 'totalAmount', 'assetClassification', 'payerPartnerId', 'paymentMethod', 'paymentStatus', 'notes', 'createdAt'],
   Modal: ['id', 'partnerId', 'partnerName', 'type', 'category', 'itemName', 'quantity', 'unit', 'amount', 'date', 'paymentMethod', 'notes', 'createdAt'],
@@ -85,6 +85,26 @@ export async function initializeSheetTabs(): Promise<{ success: boolean; message
           values: [headers],
         },
       });
+    }
+
+    // Ensure default partner records exist in Mitra tab if empty
+    try {
+      const mitraRows = await readSheetRows('Mitra');
+      if (!mitraRows || mitraRows.length === 0) {
+        await sheets.spreadsheets.values.append({
+          spreadsheetId,
+          range: `Mitra!A:A`,
+          valueInputOption: 'USER_ENTERED',
+          requestBody: {
+            values: [
+              ['partner-1', 'Kurniawan', 'mrsin178@gmail.com', 'OWNER', 50, '#D9531E', '081234567890', '123456', 'ACTIVE', 'password123'],
+              ['partner-2', 'Santoso', 'santoso@cimcim.com', 'PARTNER', 50, '#0284C7', '081298765432', '654321', 'ACTIVE', 'password123'],
+            ],
+          },
+        });
+      }
+    } catch (err) {
+      console.error('Failed to pre-populate default partners in Mitra sheet:', err);
     }
 
     return { success: true, message: `Berhasil menginisialisasi ${Object.keys(SHEET_SCHEMAS).length} tab pada Google Spreadsheet.` };

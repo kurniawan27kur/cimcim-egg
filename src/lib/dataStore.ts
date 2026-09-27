@@ -23,7 +23,7 @@ let monthlyReportsData: MonthlyReport[] = [];
 let auditLogs: AuditLog[] = [];
 
 let appSettings: AppSettings = {
-  businessName: 'CimCim Egg',
+  businessName: 'CimCim Farm',
   tagline: 'Fresh Eggs, Better Days',
   currency: 'IDR',
   partner1Name: 'Kurniawan',

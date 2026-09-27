@@ -19,7 +19,7 @@ export function generateMonthlyReportPDF(data: DashboardSummary) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(20);
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.text('CIMCIM EGG', 14, 20);
+  doc.text('CIMCIM FARM', 14, 20);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
@@ -120,5 +120,5 @@ export function generateMonthlyReportPDF(data: DashboardSummary) {
   doc.text('Santoso', 130, sigY + 22);
 
   // Save PDF
-  doc.save(`Laporan_Keuangan_CimCimEgg_${data.period}.pdf`);
+  doc.save(`Laporan_Keuangan_CimCimFarm_${data.period}.pdf`);
 }

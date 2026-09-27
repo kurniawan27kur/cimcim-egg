@@ -33,7 +33,7 @@ export async function GET() {
     return NextResponse.json({
       connected: true,
       configured: true,
-      title: res.data.properties?.title || 'CimCim Egg Spreadsheet',
+      title: res.data.properties?.title || 'CimCim Farm Spreadsheet',
       sheetCount: res.data.sheets?.length || 0,
       sheetTabs: res.data.sheets?.map((s) => s.properties?.title) || [],
       message: 'Berhasil terhubung ke Google Spreadsheet.',

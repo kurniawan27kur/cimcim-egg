@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PARTNERS_DB, AUTH_COOKIE_NAME, encodeSession } from '@/lib/auth';
+import { getAllPartners, AUTH_COOKIE_NAME, encodeSession } from '@/lib/auth';
 import { addAuditLog } from '@/lib/dataStore';
 
 export async function POST(req: Request) {
@@ -7,28 +7,51 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { email, password, pin, partnerId } = body;
 
+    const partners = await getAllPartners();
     let partner = null;
 
     if (partnerId) {
-      partner = PARTNERS_DB.find((p) => p.id === partnerId);
+      partner = partners.find((p) => p.id === partnerId);
     } else if (email) {
-      partner = PARTNERS_DB.find((p) => p.email.toLowerCase() === email.toLowerCase());
+      const cleanEmail = email.trim().toLowerCase();
+      partner = partners.find((p) => p.email.toLowerCase() === cleanEmail);
     }
 
     if (!partner) {
       return NextResponse.json(
-        { success: false, message: 'Akun mitra tidak ditemukan.' },
+        { success: false, message: 'Akun mitra tidak ditemukan. Pastikan email terdaftar di data Mitra.' },
         { status: 401 }
       );
     }
 
-    // Verify PIN or password
-    const validPassword = password === 'password123' || password === 'cimcim2026' || password === partner.name.toLowerCase() + '2026';
-    const validPin = pin === partner.pin || pin === '123456';
-
-    if (!validPassword && !validPin) {
+    if (partner.status === 'INACTIVE') {
       return NextResponse.json(
-        { success: false, message: 'Kata sandi atau PIN tidak sesuai.' },
+        { success: false, message: 'Akun mitra ini sedang tidak aktif.' },
+        { status: 403 }
+      );
+    }
+
+    // Verify Password or PIN
+    const inputPass = (password || '').trim();
+    const inputPin = (pin || '').trim();
+
+    const expectedPass = (partner.password || 'password123').trim();
+    const expectedPin = (partner.pin || '123456').trim();
+
+    const isPasswordValid = inputPass && (
+      inputPass === expectedPass ||
+      inputPass === 'password123' ||
+      inputPass === 'cimcim2026'
+    );
+
+    const isPinValid = inputPin && (
+      inputPin === expectedPin ||
+      inputPin === '123456'
+    );
+
+    if (!isPasswordValid && !isPinValid) {
+      return NextResponse.json(
+        { success: false, message: 'Kata sandi atau PIN otorisasi tidak sesuai.' },
         { status: 401 }
       );
     }
@@ -42,7 +65,13 @@ export async function POST(req: Request) {
       loginAt: new Date().toISOString(),
     });
 
-    addAuditLog(partner.name, 'USER_LOGIN', 'AUTH', partner.id, `Mitra ${partner.name} (${partner.role}) berhasil masuk ke sistem.`);
+    addAuditLog(
+      partner.name,
+      'USER_LOGIN',
+      'AUTH',
+      partner.id,
+      `Mitra ${partner.name} (${partner.role}) berhasil masuk ke sistem CimCim Farm.`
+    );
 
     const response = NextResponse.json({
       success: true,

@@ -1,4 +1,4 @@
-# 🐔 CimCim Egg - Sistem Manajemen Usaha Ternak Ayam Petelur & Bagi Hasil
+# 🐔 CimCim Farm - Sistem Manajemen Usaha Ternak Ayam Petelur & Bagi Hasil
 
 Aplikasi web manajemen usaha peternakan ayam petelur (*layer poultry farm*) dan sistem pembagian hasil (*profit sharing*) transparan 50:50 untuk dua mitra, dibangun dengan **Next.js 16 + TypeScript**, **Tailwind CSS**, dan integrasi **Google Sheets API**.
 
@@ -6,9 +6,9 @@ Aplikasi web manajemen usaha peternakan ayam petelur (*layer poultry farm*) dan 
 
 ## 📸 Antarmuka & Referensi Visual
 
-Desain aplikasi dibangun mengikuti referensi visual dashboard **CimCim Egg**:
+Desain aplikasi dibangun mengikuti identitas visual **CimCim Farm**:
 * **Palet Warna & Brand**: *Warm Terracotta Orange* (`#D9531E`), *Forest Green & Teal* (`#173B35`, `#287A68`, `#059669`), *Soft Off-White Surface* (`#F8F9FA`).
-* **Sidebar & Navigasi**: Logo khas CimCim Egg (*"Fresh Eggs, Better Days"*), item menu bergradien aktif, kartu profil pengguna dengan avatar owner, dan tombol logout.
+* **Sidebar & Navigasi**: Logo maskot khas CimCim Farm (*"Fresh Eggs, Better Days"*), item menu bergradien aktif, kartu profil pengguna dengan avatar mitra, dan tombol logout.
 * **4 KPI Cards Utama**: Total Penjualan, Total Pengeluaran, Laba Bersih, dan Bagi Hasil (Masing-masing 50%).
 * **Grafik Pemasukan & Pengeluaran**: Visualisasi multi-axis batang dan garis laba bersih bulanan (Recharts).
 * **Skema Bagi Hasil Transparan**: Diagram alur `[Total Penjualan] - [Total Pengeluaran] = [Laba Bersih]`, bercabang ke Mitra 1 (50%) dan Mitra 2 (50%).

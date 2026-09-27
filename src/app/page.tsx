@@ -73,7 +73,7 @@ export default function DashboardPage() {
           <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 animate-pulse">
             <Loader2 className="w-6 h-6 animate-spin" />
           </div>
-          <p className="text-sm font-semibold text-slate-600">Memuat CimCim Egg Dashboard...</p>
+          <p className="text-sm font-semibold text-slate-600">Memuat CimCim Farm Dashboard...</p>
         </div>
       </div>
     );
@@ -95,7 +95,7 @@ export default function DashboardPage() {
           {/* Header */}
           <Header
             title="Dashboard"
-            subtitle="Ringkasan usaha CimCim Egg bulan ini."
+            subtitle="Ringkasan usaha CimCim Farm bulan ini."
             currentPeriod={period}
             onPeriodChange={handlePeriodChange}
             actionButton={
