@@ -5,7 +5,7 @@ export const PARTNERS_DB: Partner[] = [
   {
     id: 'partner-1',
     name: 'Kurniawan',
-    email: 'kurniawan@cimcim.com',
+    email: 'mrsin178@gmail.com',
     role: 'OWNER',
     sharePercent: 50,
     avatarColor: '#D9531E',
