@@ -13,18 +13,7 @@ Desain aplikasi dibangun mengikuti identitas visual **CimCim Farm**:
 * **Grafik Pemasukan & Pengeluaran**: Visualisasi multi-axis batang dan garis laba bersih bulanan (Recharts).
 * **Skema Bagi Hasil Transparan**: Diagram alur `[Total Penjualan] - [Total Pengeluaran] = [Laba Bersih]`, bercabang ke Mitra 1 (50%) dan Mitra 2 (50%).
 * **Widget Pendukung**: Produksi Telur (progress bar target), Stok Barang (status badge *Aman*, *Cukup*, *Kritis*), dan Modal & Investasi.
-* **Responsif**: Mendukung layar desktop, tablet, dan smartphone dengan *mobile drawer* dan *bottom navigation bar*.
-
----
-
-## 🔑 Akun Mitra Terdaftar (Skema 50:50)
-
-Sesuai aturan PRD, pendaftaran publik dimatikan dan akses dibatasi untuk dua mitra:
-
-| Nama Mitra | Email | Peran | Porsi Bagi Hasil | Default Password | Default PIN Digital |
-| :--- | :--- | :--- | :---: | :--- | :---: |
-| **Kurniawan** | `kurniawan@cimcim.com` | Owner / Mitra A | 50% | `password123` | `123456` |
-| **Santoso** | `santoso@cimcim.com` | Partner / Mitra B | 50% | `password123` | `654321` |
+* **Responsif**: Mendukung layar desktop, tablet, dan smartphone dengan *mobile drawer* dan *bottom navigation bar*
 
 ---
 
@@ -63,19 +52,6 @@ Sistem menggunakan arsitektur *hybrid data engine*:
 1. **Cloud Production**: Backend mengakses Google Spreadsheet via Google Sheets API (menggunakan Service Account).
 2. **Zero-Frontend Leak**: Kredensial dan token hanya diproses di server-side API routes Next.js.
 3. **Struktur Tab Otomatis**: Fitur inisialisasi satu-klik membuat seluruh tab (`Mitra`, `Penjualan`, `Pengeluaran`, `Modal`, `Inventaris`, `Produksi`, `LaporanBulanan`, `AuditLog`) beserta header kolom standar.
-
-### Konfigurasi Environment Variables (Vercel / `.env.local`):
-
-```bash
-# Email Service Account Google Cloud
-GOOGLE_SERVICE_ACCOUNT_EMAIL="cimcim-sync@your-project.iam.gserviceaccount.com"
-
-# Private Key Google Service Account (termasuk tag BEGIN dan END)
-GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD...\n-----END PRIVATE KEY-----\n"
-
-# Spreadsheet ID dari URL Google Sheets
-GOOGLE_SHEET_ID="1A2B3C4D5E6F7G8H9I0J_your_spreadsheet_id"
-```
 
 ---
 
