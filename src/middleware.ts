@@ -5,36 +5,40 @@ const PUBLIC_PATHS = ['/login', '/api/auth/login', '/images', '/favicon.ico'];
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Allow static files, Next.js internal paths, and public paths
+  // Allow static files, Next.js internal files, images, and favicon
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/static') ||
-    pathname.includes('.') ||
-    PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + '/'))
+    pathname.startsWith('/images') ||
+    pathname.includes('.')
   ) {
     return NextResponse.next();
   }
 
   const sessionCookie = req.cookies.get('cimcim_auth_session')?.value;
 
+  // Handle login page
+  if (pathname === '/login') {
+    if (sessionCookie) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Handle public auth API
+  if (pathname === '/api/auth/login') {
+    return NextResponse.next();
+  }
+
+  // Protect all other routes
   if (!sessionCookie) {
-    // If it's an API request, return 401 Unauthorized JSON
     if (pathname.startsWith('/api/')) {
       return NextResponse.json(
         { success: false, message: 'Autentikasi diperlukan. Sesi tidak ditemukan.' },
         { status: 401 }
       );
     }
-
-    // Redirect web requests to login page
-    const loginUrl = new URL('/login', req.url);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // If already logged in and visiting /login, redirect to dashboard
-  if (pathname === '/login') {
-    const dashboardUrl = new URL('/', req.url);
-    return NextResponse.redirect(dashboardUrl);
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 
   return NextResponse.next();

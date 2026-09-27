@@ -142,6 +142,7 @@ export default function MobileNav({ currentUser }: MobileNavProps) {
           </div>
           <button
             onClick={async () => {
+              sessionStorage.removeItem('cimcim_tab_active');
               await fetch('/api/auth/logout', { method: 'POST' });
               window.location.href = '/login';
             }}

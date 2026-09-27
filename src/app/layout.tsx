@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import SessionGuard from '@/components/auth/SessionGuard';
 
 export const metadata: Metadata = {
   title: 'CimCim Farm - Sistem Manajemen Usaha Ayam Petelur & Bagi Hasil',
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="id" className="h-full antialiased bg-[#F8F9FA]">
       <body className="min-h-full flex flex-col font-sans selection:bg-orange-100 selection:text-orange-900">
-        {children}
+        <SessionGuard>{children}</SessionGuard>
       </body>
     </html>
   );

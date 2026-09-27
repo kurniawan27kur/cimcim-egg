@@ -42,6 +42,7 @@ export default function Sidebar({ currentUser }: SidebarProps) {
 
   const handleLogout = async () => {
     try {
+      sessionStorage.removeItem('cimcim_tab_active');
       await fetch('/api/auth/logout', { method: 'POST' });
       router.push('/login');
       router.refresh();

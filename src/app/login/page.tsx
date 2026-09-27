@@ -51,6 +51,11 @@ export default function LoginPage() {
         throw new Error(data.message || 'Login gagal. Periksa kembali email dan kata sandi Anda.');
       }
 
+      // Mark current browser tab as authenticated session
+      try {
+        sessionStorage.setItem('cimcim_tab_active', '1');
+      } catch {}
+
       router.push('/');
       router.refresh();
     } catch (err: any) {
@@ -87,9 +92,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-3">
-            CimCim Farm
-          </h1>
+          {/* Stylized Brand Name */}
+          <div className="mt-3.5 flex flex-col items-center">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight bg-gradient-to-r from-[#D9531E] via-amber-600 to-orange-700 bg-clip-text text-transparent drop-shadow-xs">
+              CimCim Farm
+            </h1>
+            <div className="w-8 h-1 bg-gradient-to-r from-[#D9531E] to-amber-400 rounded-full mt-1 opacity-80" />
+          </div>
         </div>
 
         {/* Login Card */}
