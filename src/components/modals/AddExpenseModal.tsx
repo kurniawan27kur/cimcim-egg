@@ -20,8 +20,8 @@ export default function AddExpenseModal({ isOpen, onClose, onSuccess }: AddExpen
   const [itemName, setItemName] = useState('');
   const [vendor, setVendor] = useState('');
   const [quantity, setQuantity] = useState<number>(1);
-  const [unit, setUnit] = useState('karung');
-  const [unitPrice, setUnitPrice] = useState<number>(320000);
+  const [unit, setUnit] = useState('item');
+  const [unitPrice, setUnitPrice] = useState<number>(0);
   const [assetClassification, setAssetClassification] = useState<AssetClassification>('OPERASIONAL');
   const [payerPartnerId, setPayerPartnerId] = useState('partner-1');
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER_BANK');
@@ -188,9 +188,10 @@ export default function AddExpenseModal({ isOpen, onClose, onSuccess }: AddExpen
                 type="number"
                 min="0"
                 step="1000"
-                value={unitPrice}
-                onChange={(e) => setUnitPrice(Number(e.target.value))}
+                value={unitPrice || ''}
+                onChange={(e) => setUnitPrice(e.target.value === '' ? 0 : Number(e.target.value))}
                 required
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>

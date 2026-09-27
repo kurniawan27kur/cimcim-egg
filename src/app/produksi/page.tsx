@@ -53,11 +53,11 @@ export default function ProduksiPage() {
   }, []);
 
   const latest = productions[0] || {
-    totalHens: 495,
-    totalEggs: 98,
-    eggsGood: 96,
-    eggsBroken: 2,
-    feedConsumptionKg: 55,
+    totalHens: 0,
+    totalEggs: 0,
+    eggsGood: 0,
+    eggsBroken: 0,
+    feedConsumptionKg: 0,
     mortalityCount: 0,
   };
 
@@ -180,6 +180,14 @@ export default function ProduksiPage() {
                       </tr>
                     );
                   })}
+
+                  {productions.length === 0 && (
+                    <tr>
+                      <td colSpan={10} className="py-12 text-center text-slate-400">
+                        {loading ? 'Memuat data produksi...' : 'Belum ada data panen telur. Klik "Catat Panen Hari Ini" untuk mulai mencatat.'}
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

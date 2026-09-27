@@ -18,10 +18,10 @@ export async function POST(req: Request) {
 
     const {
       date,
-      totalHens = 495,
+      totalHens = 0,
       eggsGood = 0,
       eggsBroken = 0,
-      feedConsumptionKg = 55,
+      feedConsumptionKg = 0,
       mortalityCount = 0,
       notes,
     } = body;
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
     const newProd = await addProduction({
       date,
-      totalHens: Number(totalHens) || 495,
+      totalHens: Number(totalHens) || 0,
       eggsGood: good,
       eggsBroken: broken,
       totalEggs: total,

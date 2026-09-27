@@ -17,9 +17,9 @@ export default function AddSaleModal({ isOpen, onClose, onSuccess }: AddSaleModa
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [customerName, setCustomerName] = useState('');
   const [productType, setProductType] = useState('Telur Layer Grade A');
-  const [quantity, setQuantity] = useState<number>(100);
+  const [quantity, setQuantity] = useState<number>(0);
   const [unit, setUnit] = useState('butir');
-  const [unitPrice, setUnitPrice] = useState<number>(2800);
+  const [unitPrice, setUnitPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER_BANK');
   const [paymentStatus, setPaymentStatus] = useState('LUNAS');
@@ -145,9 +145,10 @@ export default function AddSaleModal({ isOpen, onClose, onSuccess }: AddSaleModa
                 <input
                   type="number"
                   min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  value={quantity || ''}
+                  onChange={(e) => setQuantity(e.target.value === '' ? 0 : Number(e.target.value))}
                   required
+                  placeholder="0"
                   className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
                 />
               </div>
@@ -174,9 +175,10 @@ export default function AddSaleModal({ isOpen, onClose, onSuccess }: AddSaleModa
                 type="number"
                 min="0"
                 step="50"
-                value={unitPrice}
-                onChange={(e) => setUnitPrice(Number(e.target.value))}
+                value={unitPrice || ''}
+                onChange={(e) => setUnitPrice(e.target.value === '' ? 0 : Number(e.target.value))}
                 required
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>
@@ -185,8 +187,9 @@ export default function AddSaleModal({ isOpen, onClose, onSuccess }: AddSaleModa
               <input
                 type="number"
                 min="0"
-                value={discount}
-                onChange={(e) => setDiscount(Number(e.target.value))}
+                value={discount || ''}
+                onChange={(e) => setDiscount(e.target.value === '' ? 0 : Number(e.target.value))}
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>

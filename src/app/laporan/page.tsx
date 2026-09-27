@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import MobileNav from '@/components/layout/MobileNav';
 import Header from '@/components/layout/Header';
-import { DashboardSummary, Partner } from '@/types';
-import { formatIDR, formatDateID, formatNumber } from '@/lib/utils';
+import { DashboardSummary, Partner, SaleItem, ExpenseItem } from '@/types';
+import { formatIDR, formatDateID } from '@/lib/utils';
 import { generateMonthlyReportPDF } from '@/lib/pdfExport';
 import {
   FileText,
@@ -22,19 +22,35 @@ export default function LaporanPage() {
   const [period, setPeriod] = useState('2026-09');
   const [activeTab, setActiveTab] = useState<'PL' | 'CASHFLOW' | 'CAPITAL'>('PL');
   const [data, setData] = useState<DashboardSummary | null>(null);
+  const [sales, setSales] = useState<SaleItem[]>([]);
+  const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<Partner | null>(null);
 
   const fetchReportData = async (selectedPeriod: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/dashboard?period=${selectedPeriod}`);
-      const json = await res.json();
-      if (json.success && json.data) {
-        setData(json.data);
+      const [resDash, resSales, resExp] = await Promise.all([
+        fetch(`/api/dashboard?period=${selectedPeriod}`),
+        fetch('/api/sales'),
+        fetch('/api/expenses'),
+      ]);
+
+      const jsonDash = await resDash.json();
+      const jsonSales = await resSales.json();
+      const jsonExp = await resExp.json();
+
+      if (jsonDash.success && jsonDash.data) {
+        setData(jsonDash.data);
+      }
+      if (jsonSales.success && jsonSales.data) {
+        setSales(jsonSales.data);
+      }
+      if (jsonExp.success && jsonExp.data) {
+        setExpenses(jsonExp.data);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching report data:', err);
     } finally {
       setLoading(false);
     }
@@ -55,7 +71,34 @@ export default function LaporanPage() {
     fetchCurrentUser();
   }, [period]);
 
+  if (!data && loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F9FA]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
+          <p className="text-xs font-semibold text-slate-600">Memuat Laporan Keuangan...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!data) return null;
+
+  // Compute dynamic sales breakdown for this period
+  const periodSales = sales.filter((s) => s.date.startsWith(period));
+  const salesGrouped: Record<string, number> = {};
+  periodSales.forEach((s) => {
+    salesGrouped[s.productType] = (salesGrouped[s.productType] || 0) + s.totalAmount;
+  });
+  const salesBreakdown = Object.entries(salesGrouped);
+
+  // Compute dynamic expenses breakdown for this period
+  const periodExpenses = expenses.filter((e) => e.date.startsWith(period));
+  const expensesGrouped: Record<string, number> = {};
+  periodExpenses.forEach((e) => {
+    expensesGrouped[e.category] = (expensesGrouped[e.category] || 0) + e.totalAmount;
+  });
+  const expensesBreakdown = Object.entries(expensesGrouped);
 
   return (
     <div className="min-h-screen flex bg-[#F8F9FA] text-slate-900">
@@ -141,14 +184,20 @@ export default function LaporanPage() {
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">A. Pendapatan Usaha</h3>
                 <div className="space-y-2 text-xs sm:text-sm pl-3 border-l-2 border-orange-500">
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Penjualan Telur Layer Segar</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 7.862.500</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Penjualan Pupuk Kotoran & Lainnya</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 587.500</span>
-                  </div>
+                  {salesBreakdown.map(([prodName, amount]) => (
+                    <div key={prodName} className="flex justify-between py-1 border-b border-slate-50">
+                      <span className="text-slate-700">Penjualan {prodName}</span>
+                      <span className="font-semibold text-slate-900 tabular-nums">{formatIDR(amount)}</span>
+                    </div>
+                  ))}
+
+                  {salesBreakdown.length === 0 && (
+                    <div className="flex justify-between py-1 border-b border-slate-50 text-slate-400">
+                      <span>Belum ada transaksi penjualan pada periode ini</span>
+                      <span className="tabular-nums">Rp 0</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between py-2 font-bold text-slate-900 bg-slate-50 px-3 rounded-lg">
                     <span>Total Pendapatan Usaha (Revenue)</span>
                     <span className="tabular-nums text-orange-600">{formatIDR(data.totalSales)}</span>
@@ -160,22 +209,20 @@ export default function LaporanPage() {
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">B. Beban Operasional Usaha</h3>
                 <div className="space-y-2 text-xs sm:text-sm pl-3 border-l-2 border-rose-500">
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Beban Pakan Ayam Layer</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 4.160.000</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Beban Kesehatan, Vitamin & Sanitasi</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 430.000</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Beban Kemasan Tray & Transportasi</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 550.000</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-50">
-                    <span className="text-slate-700">Beban Listrik, Air & Perawatan</span>
-                    <span className="font-semibold text-slate-900 tabular-nums">Rp 180.000</span>
-                  </div>
+                  {expensesBreakdown.map(([catName, amount]) => (
+                    <div key={catName} className="flex justify-between py-1 border-b border-slate-50">
+                      <span className="text-slate-700">Beban {catName}</span>
+                      <span className="font-semibold text-slate-900 tabular-nums">{formatIDR(amount)}</span>
+                    </div>
+                  ))}
+
+                  {expensesBreakdown.length === 0 && (
+                    <div className="flex justify-between py-1 border-b border-slate-50 text-slate-400">
+                      <span>Belum ada beban operasional pada periode ini</span>
+                      <span className="tabular-nums">Rp 0</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between py-2 font-bold text-slate-900 bg-rose-50/70 px-3 rounded-lg text-rose-900">
                     <span>Total Beban Operasional (Expenses)</span>
                     <span className="tabular-nums text-rose-600">{formatIDR(data.totalExpenses)}</span>
@@ -251,6 +298,13 @@ export default function LaporanPage() {
                         <td className="py-2.5 text-center font-semibold text-purple-700">50% : 50%</td>
                       </tr>
                     ))}
+                    {data.capitalInvestments.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="py-8 text-center text-slate-400">
+                          Belum ada data modal & aset.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

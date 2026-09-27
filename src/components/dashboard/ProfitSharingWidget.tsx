@@ -16,11 +16,11 @@ interface ProfitSharingWidgetProps {
 }
 
 export default function ProfitSharingWidget({
-  totalSales = 8450000,
-  totalExpenses = 5320000,
-  netProfit = 3130000,
-  partnerShare = 1565000,
-  monthName = 'September 2026',
+  totalSales = 0,
+  totalExpenses = 0,
+  netProfit = 0,
+  partnerShare = 0,
+  monthName = 'Bulan Ini',
 }: ProfitSharingWidgetProps) {
   return (
     <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs">

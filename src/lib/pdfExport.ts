@@ -40,9 +40,9 @@ export function generateMonthlyReportPDF(data: DashboardSummary) {
     startY: 54,
     head: [['Indikator Finansial', 'Nilai (IDR)', 'Keterangan']],
     body: [
-      ['Total Penjualan / Pendapatan', formatIDR(data.totalSales), '+12% dari bulan sebelumnya'],
-      ['Total Pengeluaran Operasional', formatIDR(data.totalExpenses), 'Pakan, vitamin, listrik, operasional'],
-      ['Laba Bersih Operasional', formatIDR(data.netProfit), 'Penjualan - Pengeluaran'],
+      ['Total Penjualan / Pendapatan', formatIDR(data.totalSales), 'Total transaksi penjualan bulan ini'],
+      ['Total Pengeluaran Operasional', formatIDR(data.totalExpenses), 'Pakan, vitamin, operasional, & aset'],
+      ['Laba Bersih Operasional', formatIDR(data.netProfit), 'Penjualan − Pengeluaran'],
       ['Cadangan Kas Disepakati', 'Rp 0', 'Sesuai kesepakatan mitra'],
       ['Laba Yang Dapat Dibagikan', formatIDR(data.netProfit), 'Dasar pembagian hasil 50:50'],
     ],

@@ -15,11 +15,11 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
   const [error, setError] = useState('');
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [totalHens, setTotalHens] = useState(495);
-  const [eggsGood, setEggsGood] = useState(95);
-  const [eggsBroken, setEggsBroken] = useState(2);
-  const [feedConsumptionKg, setFeedConsumptionKg] = useState(55);
-  const [mortalityCount, setMortalityCount] = useState(0);
+  const [totalHens, setTotalHens] = useState<number>(0);
+  const [eggsGood, setEggsGood] = useState<number>(0);
+  const [eggsBroken, setEggsBroken] = useState<number>(0);
+  const [feedConsumptionKg, setFeedConsumptionKg] = useState<number>(0);
+  const [mortalityCount, setMortalityCount] = useState<number>(0);
   const [notes, setNotes] = useState('');
 
   if (!isOpen) return null;
@@ -105,9 +105,10 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
               <input
                 type="number"
                 min="1"
-                value={totalHens}
-                onChange={(e) => setTotalHens(Number(e.target.value))}
+                value={totalHens || ''}
+                onChange={(e) => setTotalHens(e.target.value === '' ? 0 : Number(e.target.value))}
                 required
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>
@@ -119,9 +120,10 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
               <input
                 type="number"
                 min="0"
-                value={eggsGood}
-                onChange={(e) => setEggsGood(Number(e.target.value))}
+                value={eggsGood || ''}
+                onChange={(e) => setEggsGood(e.target.value === '' ? 0 : Number(e.target.value))}
                 required
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>
@@ -130,8 +132,9 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
               <input
                 type="number"
                 min="0"
-                value={eggsBroken}
-                onChange={(e) => setEggsBroken(Number(e.target.value))}
+                value={eggsBroken || ''}
+                onChange={(e) => setEggsBroken(e.target.value === '' ? 0 : Number(e.target.value))}
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>
@@ -144,8 +147,9 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
                 type="number"
                 min="0"
                 step="0.5"
-                value={feedConsumptionKg}
-                onChange={(e) => setFeedConsumptionKg(Number(e.target.value))}
+                value={feedConsumptionKg || ''}
+                onChange={(e) => setFeedConsumptionKg(e.target.value === '' ? 0 : Number(e.target.value))}
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>
@@ -154,8 +158,9 @@ export default function RecordEggModal({ isOpen, onClose, onSuccess }: RecordEgg
               <input
                 type="number"
                 min="0"
-                value={mortalityCount}
-                onChange={(e) => setMortalityCount(Number(e.target.value))}
+                value={mortalityCount || ''}
+                onChange={(e) => setMortalityCount(e.target.value === '' ? 0 : Number(e.target.value))}
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>

@@ -22,7 +22,7 @@ export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapit
   const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState('paket');
-  const [amount, setAmount] = useState<number>(5000000);
+  const [amount, setAmount] = useState<number>(0);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER_BANK');
   const [notes, setNotes] = useState('');
@@ -181,9 +181,10 @@ export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapit
                 type="number"
                 min="0"
                 step="100000"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
+                value={amount || ''}
+                onChange={(e) => setAmount(e.target.value === '' ? 0 : Number(e.target.value))}
                 required
+                placeholder="0"
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               />
             </div>

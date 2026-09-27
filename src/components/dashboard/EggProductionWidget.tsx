@@ -14,9 +14,9 @@ interface EggProductionWidgetProps {
 }
 
 export default function EggProductionWidget({
-  totalEggs = 2850,
-  growthPercent = 10,
-  averagePerDay = 95,
+  totalEggs = 0,
+  growthPercent = 0,
+  averagePerDay = 0,
   targetPerDay = 100,
   onRecordClick,
 }: EggProductionWidgetProps) {
