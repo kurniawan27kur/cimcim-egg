@@ -11,7 +11,7 @@ interface CapitalInvestWidgetProps {
 }
 
 export default function CapitalInvestWidget({ investments = [] }: CapitalInvestWidgetProps) {
-  const displayItems = investments.slice(0, 4);
+  const displayItems = investments.slice(0, 3);
 
   const getCategoryBadge = (category: string) => {
     if (category.toLowerCase().includes('modal')) {
@@ -21,14 +21,14 @@ export default function CapitalInvestWidget({ investments = [] }: CapitalInvestW
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs">
+    <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100/60">
             <Wallet className="w-4 h-4 text-orange-500" />
           </div>
-          <h2 className="text-base font-bold text-slate-900">Modal & Investasi</h2>
+          <h2 className="text-sm sm:text-base font-bold text-slate-900">Modal & Investasi</h2>
         </div>
 
         <Link
@@ -40,37 +40,33 @@ export default function CapitalInvestWidget({ investments = [] }: CapitalInvestW
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto -mx-5 px-5">
+      <div className="overflow-x-auto">
         <table className="w-full text-left text-xs whitespace-nowrap">
           <thead>
-            <tr className="text-slate-400 font-semibold border-b border-slate-100 pb-2">
-              <th className="py-2.5 font-medium">Tanggal</th>
-              <th className="py-2.5 font-medium">Kategori</th>
-              <th className="py-2.5 font-medium">Nama Barang</th>
-              <th className="py-2.5 font-medium text-center">Jumlah</th>
-              <th className="py-2.5 font-medium text-right pr-1">Total</th>
+            <tr className="text-slate-400 font-semibold border-b border-slate-100">
+              <th className="py-2 font-medium">Tanggal</th>
+              <th className="py-2 font-medium">Kategori</th>
+              <th className="py-2 font-medium">Aset / Barang</th>
+              <th className="py-2 font-medium text-right pr-1">Total</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {displayItems.map((inv) => (
               <tr key={inv.id} className="hover:bg-slate-50/80 transition-colors">
-                <td className="py-2.5 font-medium text-slate-600">{formatDateID(inv.date)}</td>
-                <td className="py-2.5">
+                <td className="py-2 font-medium text-slate-600">{formatDateID(inv.date)}</td>
+                <td className="py-2">
                   <span
-                    className={`inline-block px-2 py-0.5 rounded-md text-[11px] font-semibold border ${getCategoryBadge(
+                    className={`inline-block px-1.5 py-0.2 rounded text-[10px] font-semibold border ${getCategoryBadge(
                       inv.category
                     )}`}
                   >
                     {inv.category}
                   </span>
                 </td>
-                <td className="py-2.5 font-medium text-slate-800 truncate max-w-[130px]">
+                <td className="py-2 font-medium text-slate-800 truncate max-w-[100px]">
                   {inv.itemName}
                 </td>
-                <td className="py-2.5 text-slate-600 text-center font-medium tabular-nums">
-                  {inv.quantity ? `${formatNumber(inv.quantity)} ${inv.unit || ''}` : '-'}
-                </td>
-                <td className="py-2.5 font-bold text-slate-900 text-right pr-1 tabular-nums">
+                <td className="py-2 font-bold text-slate-900 text-right pr-1 tabular-nums">
                   {formatIDR(inv.amount)}
                 </td>
               </tr>
@@ -78,8 +74,8 @@ export default function CapitalInvestWidget({ investments = [] }: CapitalInvestW
 
             {displayItems.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-slate-400">
-                  Belum ada data modal & investasi.
+                <td colSpan={4} className="py-4 text-center text-slate-400">
+                  Belum ada data modal.
                 </td>
               </tr>
             )}

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, CheckCircle2, ShieldCheck, Loader2, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { MonthlyReport } from '@/types';
+import { MonthlyReport, Partner } from '@/types';
 import { formatIDR } from '@/lib/utils';
 
 interface ApproveReportModalProps {
@@ -21,10 +21,30 @@ export default function ApproveReportModal({
 }: ApproveReportModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [partnerId, setPartnerId] = useState('partner-1');
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [partnerId, setPartnerId] = useState('');
   const [pin, setPin] = useState('');
 
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/partners')
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.data && json.data.length > 0) {
+            setPartners(json.data);
+            if (!partnerId) {
+              setPartnerId(json.data[0].id);
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
+
   if (!isOpen || !report) return null;
+
+  const partner1Name = partners[0]?.name || 'Mitra 1 (Kurniawan)';
+  const partner2Name = partners[1]?.name || 'Mitra 2 (Santoso)';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +57,13 @@ export default function ApproveReportModal({
     setError('');
 
     try {
+      const selectedId = partnerId || partners[0]?.id || 'partner-1';
       const res = await fetch('/api/reports/approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           period: report.period,
-          partnerId,
+          partnerId: selectedId,
           pin,
         }),
       });
@@ -110,11 +131,11 @@ export default function ApproveReportModal({
               }`}
             >
               <div className="flex items-center justify-between font-semibold">
-                <span>Mitra 1 (Kurniawan)</span>
+                <span className="truncate">{partner1Name}</span>
                 {report.partner1Approved ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 ) : (
-                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded shrink-0">
                     Menunggu
                   </span>
                 )}
@@ -132,11 +153,11 @@ export default function ApproveReportModal({
               }`}
             >
               <div className="flex items-center justify-between font-semibold">
-                <span>Mitra 2 (Santoso)</span>
+                <span className="truncate">{partner2Name}</span>
                 {report.partner2Approved ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 ) : (
-                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded shrink-0">
                     Menunggu
                   </span>
                 )}
@@ -174,16 +195,19 @@ export default function ApproveReportModal({
                 Bertindak Atas Nama Mitra *
               </label>
               <select
-                value={partnerId}
+                value={partnerId || partners[0]?.id || 'partner-1'}
                 onChange={(e) => setPartnerId(e.target.value)}
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               >
-                <option value="partner-1" disabled={report.partner1Approved}>
-                  Kurniawan (Mitra 1 / Owner) {report.partner1Approved ? '(Sudah TTD)' : ''}
-                </option>
-                <option value="partner-2" disabled={report.partner2Approved}>
-                  Santoso (Mitra 2 / Partner) {report.partner2Approved ? '(Sudah TTD)' : ''}
-                </option>
+                {partners.map((p, idx) => (
+                  <option
+                    key={p.id || idx}
+                    value={p.id}
+                    disabled={idx === 0 ? report.partner1Approved : report.partner2Approved}
+                  >
+                    {p.name} ({p.role || `Mitra ${idx + 1}`}) {((idx === 0 && report.partner1Approved) || (idx === 1 && report.partner2Approved)) ? '(Sudah TTD)' : ''}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -196,13 +220,10 @@ export default function ApproveReportModal({
                 maxLength={6}
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                placeholder="Masukkan PIN (Default: 123456 / 654321)"
+                placeholder="Masukkan PIN Otorisasi"
                 required
                 className="w-full text-center tracking-widest font-mono text-base bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
-              <p className="text-[10px] text-slate-400 mt-1 text-center">
-                PIN Mitra 1 default: <span className="font-mono font-bold">123456</span> | PIN Mitra 2: <span className="font-mono font-bold">654321</span>
-              </p>
             </div>
           </div>
 

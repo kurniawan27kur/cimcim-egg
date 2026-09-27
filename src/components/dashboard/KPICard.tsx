@@ -57,38 +57,39 @@ export default function KPICard({
   const Icon = style.icon;
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-shadow">
-      <div className="flex items-start gap-3.5">
+    <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-shadow">
+      <div className="flex items-center gap-3">
         <div
-          className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border ${style.bgColor} ${style.borderColor}`}
+          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 border ${style.bgColor} ${style.borderColor}`}
         >
-          <Icon className={`w-5 h-5 ${style.iconColor}`} />
+          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${style.iconColor}`} />
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-slate-500 truncate">{title}</p>
-          
-          <div className="flex items-baseline gap-2 mt-1 flex-wrap">
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight tabular-nums">
-              {formatIDR(value)}
-            </h3>
-
+          <div className="flex items-center justify-between gap-1">
+            <p className="text-[11px] sm:text-xs font-medium text-slate-500 truncate">{title}</p>
             {growthPercent !== undefined && (
               <span
-                className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-semibold ${
+                className={`inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
                   type === 'expenses'
                     ? 'bg-rose-50 text-rose-600'
                     : 'bg-emerald-50 text-emerald-700'
                 }`}
               >
-                <ArrowUpRight className="w-3 h-3" />
+                <ArrowUpRight className="w-2.5 h-2.5" />
                 {growthPercent}%
               </span>
             )}
           </div>
 
-          <p className="text-[11px] text-slate-400 mt-1 font-normal truncate">
-            {subtitle || 'dari bulan lalu'}
+          <div className="flex items-baseline justify-between gap-1 mt-0.5">
+            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight tabular-nums truncate">
+              {formatIDR(value)}
+            </h3>
+          </div>
+
+          <p className="text-[10px] text-slate-400 font-normal truncate mt-0.5">
+            {subtitle || 'bulan ini'}
           </p>
         </div>
       </div>

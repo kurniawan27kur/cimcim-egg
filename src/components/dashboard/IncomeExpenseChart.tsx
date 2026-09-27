@@ -56,77 +56,77 @@ export default function IncomeExpenseChart({ data }: ChartProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs">
+    <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
       {/* Header & Filter */}
-      <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
         <div>
-          <h2 className="text-base font-bold text-slate-900">Grafik Pemasukan & Pengeluaran</h2>
+          <h2 className="text-sm sm:text-base font-bold text-slate-900">Grafik Pemasukan & Pengeluaran</h2>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Custom Legend */}
+          <div className="hidden sm:flex items-center gap-3 text-[11px] font-medium text-slate-600">
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#EA580C]" />
+              <span>Penjualan</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#FED7AA]" />
+              <span>Pengeluaran</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#0D9488]" />
+              <span>Laba Bersih</span>
+            </div>
+          </div>
+
           <div className="relative">
             <select
               value={year}
               onChange={(e) => setYear(e.target.value)}
-              className="appearance-none bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg pl-2.5 pr-6 py-1.5 focus:outline-none cursor-pointer"
+              className="appearance-none bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-semibold rounded-lg pl-2 pr-5 py-1 focus:outline-none cursor-pointer"
             >
-              <option value="2026">Tahun 2026</option>
-              <option value="2025">Tahun 2025</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
             </select>
-            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
       </div>
 
-      {/* Custom Legend matching UI */}
-      <div className="flex items-center justify-end gap-4 text-xs font-medium mb-3 text-slate-600 flex-wrap">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]" />
-          <span>Penjualan</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#FED7AA]" />
-          <span>Pengeluaran</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#0D9488]" />
-          <span>Laba Bersih</span>
-        </div>
-      </div>
-
       {/* Chart Canvas */}
-      <div className="w-full h-[240px] sm:h-[270px]">
+      <div className="w-full h-[170px] sm:h-[190px] lg:h-[200px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+          <ComposedChart data={data} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={{ stroke: '#E2E8F0' }}
-              tick={{ fill: '#64748B', fontSize: 11 }}
+              tick={{ fill: '#64748B', fontSize: 10 }}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               tickFormatter={formatYAxis}
-              tick={{ fill: '#94A3B8', fontSize: 11 }}
+              tick={{ fill: '#94A3B8', fontSize: 10 }}
               domain={[0, 12000000]}
               ticks={[0, 3000000, 6000000, 9000000, 12000000]}
             />
             <Tooltip content={<CustomTooltip />} />
             {/* Sales Bar */}
-            <Bar dataKey="sales" name="Penjualan" fill="#EA580C" radius={[4, 4, 0, 0]} maxBarSize={16} />
+            <Bar dataKey="sales" name="Penjualan" fill="#EA580C" radius={[3, 3, 0, 0]} maxBarSize={14} />
             {/* Expenses Bar */}
-            <Bar dataKey="expenses" name="Pengeluaran" fill="#FED7AA" radius={[4, 4, 0, 0]} maxBarSize={16} />
+            <Bar dataKey="expenses" name="Pengeluaran" fill="#FED7AA" radius={[3, 3, 0, 0]} maxBarSize={14} />
             {/* Net Profit Line */}
             <Line
               type="monotone"
               dataKey="netProfit"
               name="Laba Bersih"
               stroke="#0D9488"
-              strokeWidth={2.5}
-              dot={{ fill: '#0D9488', r: 3.5, strokeWidth: 1, stroke: '#FFFFFF' }}
-              activeDot={{ r: 5 }}
+              strokeWidth={2}
+              dot={{ fill: '#0D9488', r: 3, strokeWidth: 1, stroke: '#FFFFFF' }}
+              activeDot={{ r: 4.5 }}
             />
           </ComposedChart>
         </ResponsiveContainer>

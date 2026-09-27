@@ -91,32 +91,32 @@ export default function DashboardPage() {
         {/* Mobile Header */}
         <MobileNav currentUser={currentUser} />
 
-        <main className="p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto space-y-6">
+        <main className="p-3 sm:p-5 lg:p-5 max-w-[1440px] w-full mx-auto space-y-3.5">
           {/* Header */}
           <Header
             title="Dashboard"
-            subtitle="Ringkasan usaha CimCim Farm bulan ini."
+            subtitle="Ringkasan performa usaha & bagi hasil CimCim Farm."
             currentPeriod={period}
             onPeriodChange={handlePeriodChange}
             actionButton={
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => generateMonthlyReportPDF(d)}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors shadow-2xs"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors shadow-2xs cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5 text-slate-500" />
                   <span>PDF Laporan</span>
                 </button>
                 <button
                   onClick={() => setIsAddSaleOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#D9531E] hover:bg-orange-700 rounded-xl transition-all shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#D9531E] hover:bg-orange-700 rounded-xl transition-all shadow-xs cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Catat Penjualan</span>
                 </button>
                 <button
                   onClick={() => setIsAddExpenseOpen(true)}
-                  className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors"
+                  className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Catat Biaya</span>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           />
 
           {/* Top 4 KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
             <KPICard
               type="sales"
               title="Total Penjualan"
@@ -150,24 +150,18 @@ export default function DashboardPage() {
             />
             <KPICard
               type="sharing"
-              title="Bagi Hasil (Masing-masing)"
+              title="Bagi Hasil / Mitra"
               value={d.profitSharePerPartner}
-              subtitle="50% : 50% dari laba bersih"
+              subtitle="50% : 50% dari laba"
             />
           </div>
 
           {/* Main 2-Column Section matching Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
             {/* Left Main Column (65% width = 8 cols on desktop) */}
-            <div className="lg:col-span-8 space-y-5">
+            <div className="lg:col-span-8 space-y-3.5">
               {/* Income & Expense Chart */}
               <IncomeExpenseChart data={d.monthlyChartData} />
-
-              {/* Sub-grid with Recent Sales & Recent Expenses */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <RecentSalesWidget sales={d.recentSales} />
-                <RecentExpensesWidget expenses={d.recentExpenses} />
-              </div>
 
               {/* Profit Sharing Flow Widget */}
               <ProfitSharingWidget
@@ -178,10 +172,16 @@ export default function DashboardPage() {
                 partnerShare={d.profitSharePerPartner}
                 monthName={d.monthName}
               />
+
+              {/* Sub-grid with Recent Sales & Recent Expenses */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <RecentSalesWidget sales={d.recentSales} />
+                <RecentExpensesWidget expenses={d.recentExpenses} />
+              </div>
             </div>
 
             {/* Right Column (35% width = 4 cols on desktop) */}
-            <div className="lg:col-span-4 space-y-5">
+            <div className="lg:col-span-4 space-y-3.5">
               {/* Egg Production Widget */}
               <EggProductionWidget
                 totalEggs={d.totalEggsThisMonth}

@@ -10,7 +10,7 @@ interface RecentExpensesWidgetProps {
 }
 
 export default function RecentExpensesWidget({ expenses = [] }: RecentExpensesWidgetProps) {
-  const displayExpenses = expenses.slice(0, 5);
+  const displayExpenses = expenses.slice(0, 3);
 
   const getCategoryBadge = (category: ExpenseCategory | string) => {
     switch (category) {
@@ -30,10 +30,10 @@ export default function RecentExpensesWidget({ expenses = [] }: RecentExpensesWi
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs">
+    <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-bold text-slate-900">Pengeluaran Terbaru</h2>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-sm sm:text-base font-bold text-slate-900">Pengeluaran Terbaru</h2>
         <Link
           href="/pengeluaran"
           className="text-xs font-semibold text-orange-600 hover:text-orange-700 hover:underline"
@@ -43,33 +43,33 @@ export default function RecentExpensesWidget({ expenses = [] }: RecentExpensesWi
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto -mx-5 px-5">
+      <div className="overflow-x-auto">
         <table className="w-full text-left text-xs whitespace-nowrap">
           <thead>
-            <tr className="text-slate-400 font-semibold border-b border-slate-100 pb-2">
-              <th className="py-2.5 font-medium">Tanggal</th>
-              <th className="py-2.5 font-medium">Kategori</th>
-              <th className="py-2.5 font-medium">Nama Barang</th>
-              <th className="py-2.5 font-medium text-right pr-1">Total</th>
+            <tr className="text-slate-400 font-semibold border-b border-slate-100">
+              <th className="py-2 font-medium">Tanggal</th>
+              <th className="py-2 font-medium">Kategori</th>
+              <th className="py-2 font-medium">Barang</th>
+              <th className="py-2 font-medium text-right pr-1">Total</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {displayExpenses.map((exp) => (
               <tr key={exp.id} className="hover:bg-slate-50/80 transition-colors">
-                <td className="py-2.5 font-medium text-slate-600">{formatDateID(exp.date)}</td>
-                <td className="py-2.5">
+                <td className="py-2 font-medium text-slate-600">{formatDateID(exp.date)}</td>
+                <td className="py-2">
                   <span
-                    className={`inline-block px-2 py-0.5 rounded-md text-[11px] font-semibold border ${getCategoryBadge(
+                    className={`inline-block px-1.5 py-0.2 rounded text-[10px] font-semibold border ${getCategoryBadge(
                       exp.category
                     )}`}
                   >
                     {exp.category}
                   </span>
                 </td>
-                <td className="py-2.5 font-medium text-slate-800 truncate max-w-[130px]">
+                <td className="py-2 font-medium text-slate-800 truncate max-w-[100px]">
                   {exp.itemName}
                 </td>
-                <td className="py-2.5 font-bold text-slate-900 text-right pr-1 tabular-nums">
+                <td className="py-2 font-bold text-slate-900 text-right pr-1 tabular-nums">
                   {formatIDR(exp.totalAmount)}
                 </td>
               </tr>
@@ -77,8 +77,8 @@ export default function RecentExpensesWidget({ expenses = [] }: RecentExpensesWi
 
             {displayExpenses.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-6 text-center text-slate-400">
-                  Belum ada transaksi pengeluaran terbaru.
+                <td colSpan={4} className="py-4 text-center text-slate-400">
+                  Belum ada transaksi.
                 </td>
               </tr>
             )}

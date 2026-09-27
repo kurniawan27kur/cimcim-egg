@@ -64,8 +64,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col justify-center items-center p-4 sm:p-6 selection:bg-orange-100 selection:text-orange-900">
       <div className="w-full max-w-[420px] space-y-6">
         
-        {/* Mascot & Brand Header */}
-        <div className="flex flex-col items-center text-center space-y-3">
+        {/* Mascot Header */}
+        <div className="flex flex-col items-center text-center">
           <div className="relative group">
             {/* Ambient Glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-amber-400/30 to-orange-500/30 rounded-full blur-lg opacity-70 group-hover:opacity-100 transition duration-500" />
@@ -85,19 +85,6 @@ export default function LoginPage() {
             <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-xs border border-orange-100 text-xs">
               🌾
             </div>
-          </div>
-
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100/70 border border-orange-200/60 text-orange-800 text-[11px] font-bold tracking-wide uppercase mb-1">
-              <Sparkles className="w-3 h-3 text-orange-600" />
-              <span>CimCim Farm System</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              CimCim Farm
-            </h1>
-            <p className="text-xs text-slate-500 font-medium max-w-xs mx-auto mt-1">
-              Sistem Manajemen Peternakan Modern, Produksi Telur, & Transparansi Bagi Hasil
-            </p>
           </div>
         </div>
 
