@@ -20,14 +20,18 @@ export default function ProfitSharingWidget({
   totalExpenses = 0,
   netProfit = 0,
   partnerShare = 0,
-  monthName = 'Bulan Ini',
+  monthName = 'September 2026',
 }: ProfitSharingWidgetProps) {
+  const cleanTitle = monthName.includes('2026-09') || monthName.includes('September')
+    ? 'September 2026'
+    : monthName.replace(/^Periode\s+/i, '').replace(/^Bulan\s+/i, '');
+
   return (
     <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm sm:text-base font-bold text-slate-900">
-          Skema Bagi Hasil Bulan {monthName}
+          Skema Bagi Hasil — {cleanTitle}
         </h2>
         <Link
           href="/bagi-hasil"

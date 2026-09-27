@@ -90,7 +90,12 @@ export default function InventoryStockWidget({ items = [] }: InventoryStockWidge
         ))}
 
         {displayItems.length === 0 && (
-          <p className="text-xs text-slate-400 text-center py-2">Belum ada data stok.</p>
+          <div className="py-4 text-center">
+            <div className="flex flex-col items-center justify-center gap-1">
+              <span className="text-base">📦</span>
+              <span className="text-[11px] font-medium text-slate-400">Belum ada data stok inventaris.</span>
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -86,6 +86,10 @@ export default function LoginPage() {
               🌾
             </div>
           </div>
+
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-3">
+            CimCim Farm
+          </h1>
         </div>
 
         {/* Login Card */}

@@ -31,23 +31,15 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verify Password or PIN
+    // Verify Password or PIN strictly against partner record
     const inputPass = (password || '').trim();
     const inputPin = (pin || '').trim();
 
     const expectedPass = (partner.password || 'password123').trim();
     const expectedPin = (partner.pin || '123456').trim();
 
-    const isPasswordValid = inputPass && (
-      inputPass === expectedPass ||
-      inputPass === 'password123' ||
-      inputPass === 'cimcim2026'
-    );
-
-    const isPinValid = inputPin && (
-      inputPin === expectedPin ||
-      inputPin === '123456'
-    );
+    const isPasswordValid = Boolean(inputPass && inputPass === expectedPass);
+    const isPinValid = Boolean(inputPin && inputPin === expectedPin);
 
     if (!isPasswordValid && !isPinValid) {
       return NextResponse.json(

@@ -77,8 +77,11 @@ export default function RecentExpensesWidget({ expenses = [] }: RecentExpensesWi
 
             {displayExpenses.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-4 text-center text-slate-400">
-                  Belum ada transaksi.
+                <td colSpan={4} className="py-5 text-center text-slate-400">
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <span className="text-base">📋</span>
+                    <span className="text-[11px] font-medium text-slate-400">Belum ada catatan biaya operasional bulan ini.</span>
+                  </div>
                 </td>
               </tr>
             )}

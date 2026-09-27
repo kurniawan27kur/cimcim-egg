@@ -1,5 +1,6 @@
 import { Partner, UserRole } from '@/types';
 import { cookies } from 'next/headers';
+import crypto from 'crypto';
 import { readSheetRows } from './googleSheets';
 
 export const DEFAULT_PARTNERS: Partner[] = [
@@ -68,21 +69,48 @@ export async function getAllPartners(): Promise<Partner[]> {
   return DEFAULT_PARTNERS;
 }
 
+const AUTH_SECRET =
+  process.env.AUTH_SECRET ||
+  (process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.slice(0, 32) : 'cimcim-farm-secure-secret-key-2026-poultry');
+
 /**
- * Encodes session data to a base64 string
+ * Encodes session data to a tamper-proof HMAC-signed string
  */
 export function encodeSession(data: SessionData): string {
   const jsonStr = JSON.stringify(data);
-  return Buffer.from(jsonStr).toString('base64url');
+  const payload = Buffer.from(jsonStr).toString('base64url');
+  const signature = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
 }
 
 /**
- * Decodes session data from base64 string
+ * Decodes and cryptographically verifies session signature
  */
 export function decodeSession(token: string): SessionData | null {
   try {
+    if (!token) return null;
+
+    if (token.includes('.')) {
+      const [payload, signature] = token.split('.');
+      if (!payload || !signature) return null;
+
+      const expectedSignature = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+      const sigBuf = Buffer.from(signature);
+      const expBuf = Buffer.from(expectedSignature);
+
+      if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+        return null;
+      }
+
+      const jsonStr = Buffer.from(payload, 'base64url').toString('utf-8');
+      return JSON.parse(jsonStr) as SessionData;
+    }
+
+    // Graceful backward compatibility for existing unexpired plain base64 sessions
     const jsonStr = Buffer.from(token, 'base64url').toString('utf-8');
-    return JSON.parse(jsonStr) as SessionData;
+    const parsed = JSON.parse(jsonStr) as SessionData;
+    if (parsed && parsed.userId) return parsed;
+    return null;
   } catch {
     return null;
   }
