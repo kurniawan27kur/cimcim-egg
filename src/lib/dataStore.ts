@@ -10,7 +10,7 @@ import {
   AppSettings,
   Partner,
 } from '@/types';
-import { PARTNERS_DB } from './auth';
+import { getAllPartners, PARTNERS_DB } from './auth';
 import { appendSheetRow, readSheetRows, deleteSheetRowById } from './googleSheets';
 
 // Real clean in-memory state (Starts empty for manual user input)
@@ -26,11 +26,11 @@ let appSettings: AppSettings = {
   businessName: 'CimCim Farm',
   tagline: 'Fresh Eggs, Better Days',
   currency: 'IDR',
-  partner1Name: 'Kurniawan',
-  partner1Email: 'mrsin178@gmail.com',
+  partner1Name: 'Mitra 1',
+  partner1Email: '',
   partner1Share: 50,
-  partner2Name: 'Santoso',
-  partner2Email: 'santoso@cimcim.com',
+  partner2Name: 'Mitra 2',
+  partner2Email: '',
   partner2Share: 50,
   googleSheetId: process.env.GOOGLE_SHEET_ID || '',
   googleSheetConnected: Boolean(process.env.GOOGLE_SHEET_ID && process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL),
@@ -508,7 +508,22 @@ export function addAuditLog(actorName: string, action: string, entityType: strin
 }
 
 export async function getAppSettings(): Promise<AppSettings> {
-  return { ...appSettings };
+  try {
+    const partners = await getAllPartners();
+    const p1 = partners[0];
+    const p2 = partners[1];
+    return {
+      ...appSettings,
+      partner1Name: p1?.name || appSettings.partner1Name || 'Mitra 1',
+      partner1Email: p1?.email || appSettings.partner1Email || '',
+      partner1Share: p1?.sharePercent || appSettings.partner1Share || 50,
+      partner2Name: p2?.name || appSettings.partner2Name || 'Mitra 2',
+      partner2Email: p2?.email || appSettings.partner2Email || '',
+      partner2Share: p2?.sharePercent || appSettings.partner2Share || 50,
+    };
+  } catch {
+    return { ...appSettings };
+  }
 }
 
 export async function updateAppSettings(settings: Partial<AppSettings>): Promise<AppSettings> {

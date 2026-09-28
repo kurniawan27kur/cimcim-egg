@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       feedConsumptionKg: Number(feedConsumptionKg) || 0,
       mortalityCount: Number(mortalityCount) || 0,
       notes,
-      recordedBy: user?.name || 'Kurniawan',
+      recordedBy: user?.name || 'Mitra',
     });
 
     return NextResponse.json({ success: true, data: newProd });

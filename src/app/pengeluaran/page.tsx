@@ -20,6 +20,7 @@ import {
 
 export default function PengeluaranPage() {
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<Partner | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -42,6 +43,18 @@ export default function PengeluaranPage() {
     }
   };
 
+  const fetchPartners = async () => {
+    try {
+      const res = await fetch('/api/partners');
+      const json = await res.json();
+      if (json.success && json.data) {
+        setPartners(json.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const res = await fetch('/api/auth/me');
@@ -54,8 +67,18 @@ export default function PengeluaranPage() {
 
   useEffect(() => {
     fetchExpenses();
+    fetchPartners();
     fetchCurrentUser();
   }, []);
+
+  const getPayerName = (payerId: string) => {
+    if (payerId === 'KAS_USAHA') return 'Kas Usaha';
+    const found = partners.find((p) => p.id === payerId);
+    if (found) return found.name;
+    if (payerId === 'partner-1') return partners[0]?.name || 'Mitra 1';
+    if (payerId === 'partner-2') return partners[1]?.name || 'Mitra 2';
+    return payerId || 'Kas Usaha';
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus transaksi pengeluaran ini?')) return;
@@ -282,7 +305,7 @@ export default function PengeluaranPage() {
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center text-slate-500 font-medium">
-                        {exp.payerPartnerId === 'partner-1' ? 'Kurniawan' : exp.payerPartnerId === 'partner-2' ? 'Santoso' : 'Kas Usaha'}
+                        {getPayerName(exp.payerPartnerId)}
                       </td>
                       <td className="py-3 px-4 text-right">
                         <button

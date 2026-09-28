@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         status,
         notes,
       },
-      user?.name || 'Kurniawan'
+      user?.name || 'Mitra'
     );
 
     return NextResponse.json({ success: true, data: newItem });
@@ -61,7 +61,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ success: false, message: 'ID barang dan jumlah stok baru wajib diisi.' }, { status: 400 });
     }
 
-    const updated = await updateInventoryStock(id, Number(quantity), user?.name || 'Kurniawan');
+    const updated = await updateInventoryStock(id, Number(quantity), user?.name || 'Mitra');
     if (!updated) {
       return NextResponse.json({ success: false, message: 'Barang inventaris tidak ditemukan.' }, { status: 404 });
     }

@@ -53,7 +53,7 @@ export default function Sidebar({ currentUser }: SidebarProps) {
 
   const user = currentUser || {
     id: 'partner-1',
-    name: 'Kurniawan',
+    name: 'Mitra',
     role: 'Owner',
     avatarColor: '#D9531E',
   };

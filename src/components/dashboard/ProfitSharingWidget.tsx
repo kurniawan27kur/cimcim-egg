@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Receipt, CheckCircle2, User, ArrowRight } from 'lucide-react';
 import { formatIDR } from '@/lib/utils';
-import { MonthlyReport } from '@/types';
+import { MonthlyReport, Partner } from '@/types';
 
 interface ProfitSharingWidgetProps {
   report?: MonthlyReport;
@@ -13,6 +13,7 @@ interface ProfitSharingWidgetProps {
   netProfit?: number;
   partnerShare?: number;
   monthName?: string;
+  partners?: Partner[];
 }
 
 export default function ProfitSharingWidget({
@@ -21,7 +22,16 @@ export default function ProfitSharingWidget({
   netProfit = 0,
   partnerShare = 0,
   monthName = 'September 2026',
+  partners = [],
 }: ProfitSharingWidgetProps) {
+  const p1Name = partners[0]?.name || 'Mitra 1';
+  const p1Share = partners[0]?.sharePercent ?? 50;
+  const p1Avatar = partners[0]?.avatarColor || '#D9531E';
+
+  const p2Name = partners[1]?.name || 'Mitra 2';
+  const p2Share = partners[1]?.sharePercent ?? 50;
+  const p2Avatar = partners[1]?.avatarColor || '#0284C7';
+
   const cleanTitle = monthName.includes('2026-09') || monthName.includes('September')
     ? 'September 2026'
     : monthName.replace(/^Periode\s+/i, '').replace(/^Bulan\s+/i, '');
@@ -92,11 +102,14 @@ export default function ProfitSharingWidget({
       <div className="grid grid-cols-2 gap-3 mt-3">
         {/* Partner 1 */}
         <div className="bg-[#FFF5EB] border border-orange-200/70 rounded-xl p-2.5 sm:p-3 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-orange-100 border border-orange-200 flex items-center justify-center text-[#D9531E] shrink-0">
-            <User className="w-4 h-4" />
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0 font-bold text-xs"
+            style={{ backgroundColor: p1Avatar }}
+          >
+            {p1Name ? p1Name.charAt(0).toUpperCase() : 'M'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-slate-600 truncate">Mitra A (50%)</p>
+            <p className="text-[11px] font-semibold text-slate-600 truncate">{p1Name} ({p1Share}%)</p>
             <p className="text-xs sm:text-sm font-bold text-slate-900 tabular-nums truncate">
               {formatIDR(partnerShare)}
             </p>
@@ -105,11 +118,14 @@ export default function ProfitSharingWidget({
 
         {/* Partner 2 */}
         <div className="bg-[#F0F9FF] border border-sky-200/70 rounded-xl p-2.5 sm:p-3 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-sky-100 border border-sky-200 flex items-center justify-center text-sky-600 shrink-0">
-            <User className="w-4 h-4" />
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0 font-bold text-xs"
+            style={{ backgroundColor: p2Avatar }}
+          >
+            {p2Name ? p2Name.charAt(0).toUpperCase() : 'M'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-slate-600 truncate">Mitra B (50%)</p>
+            <p className="text-[11px] font-semibold text-slate-600 truncate">{p2Name} ({p2Share}%)</p>
             <p className="text-xs sm:text-sm font-bold text-slate-900 tabular-nums truncate">
               {formatIDR(partnerShare)}
             </p>

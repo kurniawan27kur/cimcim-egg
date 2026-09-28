@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Wallet, Loader2 } from 'lucide-react';
 import { formatIDR } from '@/lib/utils';
-import { CapitalType } from '@/types';
+import { CapitalType, Partner } from '@/types';
 
 interface AddCapitalModalProps {
   isOpen: boolean;
@@ -14,9 +14,9 @@ interface AddCapitalModalProps {
 export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapitalModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [partners, setPartners] = useState<Partner[]>([]);
 
   const [partnerId, setPartnerId] = useState('partner-1');
-  const [partnerName, setPartnerName] = useState('Kurniawan');
   const [type, setType] = useState<CapitalType>('MODAL_AWAL');
   const [category, setCategory] = useState('Modal Awal');
   const [itemName, setItemName] = useState('');
@@ -26,6 +26,20 @@ export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapit
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER_BANK');
   const [notes, setNotes] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/partners')
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.data && json.data.length > 0) {
+            setPartners(json.data);
+            setPartnerId(json.data[0].id);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -40,12 +54,20 @@ export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapit
     setError('');
 
     try {
+      const selectedPartner = partners.find((p) => p.id === partnerId);
+      let resolvedPartnerName = 'Mitra';
+      if (selectedPartner) {
+        resolvedPartnerName = selectedPartner.name;
+      } else if (partnerId === 'partner-both') {
+        resolvedPartnerName = partners.map((p) => p.name).join(' & ') || 'Bersama (50:50)';
+      }
+
       const res = await fetch('/api/capital', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           partnerId,
-          partnerName: partnerId === 'partner-1' ? 'Kurniawan' : partnerId === 'partner-2' ? 'Santoso' : 'Kurniawan & Santoso',
+          partnerName: resolvedPartnerName,
           type,
           category,
           itemName,
@@ -108,8 +130,17 @@ export default function AddCapitalModal({ isOpen, onClose, onSuccess }: AddCapit
                 onChange={(e) => setPartnerId(e.target.value)}
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               >
-                <option value="partner-1">Partner 1 (Kurniawan)</option>
-                <option value="partner-2">Partner 2 (Santoso)</option>
+                {partners.map((p, idx) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.role || `Mitra ${idx + 1}`})
+                  </option>
+                ))}
+                {partners.length === 0 && (
+                  <>
+                    <option value="partner-1">Mitra 1</option>
+                    <option value="partner-2">Mitra 2</option>
+                  </>
+                )}
                 <option value="partner-both">Bersama (50:50)</option>
               </select>
             </div>

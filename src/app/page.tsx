@@ -22,6 +22,7 @@ import { Plus, Download, Loader2 } from 'lucide-react';
 export default function DashboardPage() {
   const [period, setPeriod] = useState('2026-09');
   const [data, setData] = useState<DashboardSummary | null>(null);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<Partner | null>(null);
 
@@ -45,6 +46,18 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchPartners = async () => {
+    try {
+      const res = await fetch('/api/partners');
+      const json = await res.json();
+      if (json.success && json.data) {
+        setPartners(json.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch partners:', err);
+    }
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const res = await fetch('/api/auth/me');
@@ -59,6 +72,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchDashboardData(period);
+    fetchPartners();
     fetchCurrentUser();
   }, [period]);
 
@@ -101,7 +115,7 @@ export default function DashboardPage() {
             actionButton={
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
-                  onClick={() => generateMonthlyReportPDF(d)}
+                  onClick={() => generateMonthlyReportPDF(d, partners)}
                   className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors shadow-2xs cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5 text-slate-500" />
@@ -171,6 +185,7 @@ export default function DashboardPage() {
                 netProfit={d.netProfit}
                 partnerShare={d.profitSharePerPartner}
                 monthName={d.monthName}
+                partners={partners}
               />
 
               {/* Sub-grid with Recent Sales & Recent Expenses */}

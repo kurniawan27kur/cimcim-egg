@@ -19,6 +19,7 @@ import {
 
 export default function ModalPage() {
   const [capitals, setCapitals] = useState<CapitalContribution[]>([]);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<Partner | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -38,6 +39,18 @@ export default function ModalPage() {
     }
   };
 
+  const fetchPartners = async () => {
+    try {
+      const res = await fetch('/api/partners');
+      const json = await res.json();
+      if (json.success && json.data) {
+        setPartners(json.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const res = await fetch('/api/auth/me');
@@ -50,6 +63,7 @@ export default function ModalPage() {
 
   useEffect(() => {
     fetchCapitals();
+    fetchPartners();
     fetchCurrentUser();
   }, []);
 
@@ -68,7 +82,7 @@ export default function ModalPage() {
         <main className="p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto space-y-6">
           <Header
             title="Modal & Mitra"
-            subtitle="Pencatatan modal awal usaha, kontribusi aset, dan kepemilikan 50:50 kedua mitra."
+            subtitle="Pencatatan modal awal usaha, kontribusi aset, dan kepemilikan bagi hasil mitra."
             actionButton={
               <button
                 onClick={() => setIsAddOpen(true)}
@@ -82,47 +96,47 @@ export default function ModalPage() {
 
           {/* Partner Split Banner */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Mitra 1 */}
-            <div className="bg-white rounded-2xl p-5 border border-orange-200/80 shadow-2xs flex items-center justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-[#D9531E] font-bold text-lg">
-                  K
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-slate-900">Kurniawan</h3>
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-orange-100 text-orange-800">
-                      Owner (Mitra A)
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-0.5">kurniawan@cimcim.com</p>
-                  <p className="text-xs font-semibold text-orange-600 mt-2">
-                    Porsi Kepemilikan & Bagi Hasil: 50%
-                  </p>
-                </div>
-              </div>
-            </div>
+            {partners.length > 0 ? (
+              partners.map((partner, idx) => {
+                const isFirst = idx === 0;
+                const borderClass = isFirst ? 'border-orange-200/80' : 'border-sky-200/80';
+                const bgBadgeClass = isFirst ? 'bg-orange-100 text-orange-800' : 'bg-sky-100 text-sky-800';
+                const textColorClass = isFirst ? 'text-orange-600' : 'text-sky-600';
+                const avatarBg = partner.avatarColor || (isFirst ? '#D9531E' : '#0284C7');
 
-            {/* Mitra 2 */}
-            <div className="bg-white rounded-2xl p-5 border border-sky-200/80 shadow-2xs flex items-center justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-lg">
-                  S
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-slate-900">Santoso</h3>
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-100 text-sky-800">
-                      Partner (Mitra B)
-                    </span>
+                return (
+                  <div
+                    key={partner.id || idx}
+                    className={`bg-white rounded-2xl p-5 border ${borderClass} shadow-2xs flex items-center justify-between`}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-2xs"
+                        style={{ backgroundColor: avatarBg }}
+                      >
+                        {partner.name ? partner.name.charAt(0).toUpperCase() : `M${idx + 1}`}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-base text-slate-900">{partner.name}</h3>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${bgBadgeClass}`}>
+                            {partner.role || (isFirst ? 'Owner (Mitra 1)' : 'Partner (Mitra 2)')}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">{partner.email || 'Email belum terdaftar'}</p>
+                        <p className={`text-xs font-semibold ${textColorClass} mt-2`}>
+                          Porsi Kepemilikan & Bagi Hasil: {partner.sharePercent || 50}%
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">santoso@cimcim.com</p>
-                  <p className="text-xs font-semibold text-sky-600 mt-2">
-                    Porsi Kepemilikan & Bagi Hasil: 50%
-                  </p>
-                </div>
+                );
+              })
+            ) : (
+              <div className="col-span-2 p-6 bg-white rounded-2xl border border-slate-200 text-xs text-slate-500 text-center">
+                Memuat data mitra...
               </div>
-            </div>
+            )}
           </div>
 
           {/* Capital Metrics */}

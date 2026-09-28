@@ -51,7 +51,7 @@ export async function POST(req: Request) {
         paymentMethod,
         notes,
       },
-      user?.name || 'Kurniawan'
+      user?.name || 'Mitra'
     );
 
     return NextResponse.json({ success: true, data: newCap });

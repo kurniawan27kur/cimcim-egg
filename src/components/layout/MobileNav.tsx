@@ -27,7 +27,7 @@ export default function MobileNav({ currentUser }: MobileNavProps) {
 
   const user = currentUser || {
     id: 'partner-1',
-    name: 'Kurniawan',
+    name: 'Mitra',
     role: 'Owner',
     avatarColor: '#D9531E',
   };

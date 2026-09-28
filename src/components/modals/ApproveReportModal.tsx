@@ -43,8 +43,8 @@ export default function ApproveReportModal({
 
   if (!isOpen || !report) return null;
 
-  const partner1Name = partners[0]?.name || 'Mitra 1 (Kurniawan)';
-  const partner2Name = partners[1]?.name || 'Mitra 2 (Santoso)';
+  const partner1Name = partners[0]?.name || 'Mitra 1';
+  const partner2Name = partners[1]?.name || 'Mitra 2';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

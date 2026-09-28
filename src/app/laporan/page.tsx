@@ -22,6 +22,7 @@ export default function LaporanPage() {
   const [period, setPeriod] = useState('2026-09');
   const [activeTab, setActiveTab] = useState<'PL' | 'CASHFLOW' | 'CAPITAL'>('PL');
   const [data, setData] = useState<DashboardSummary | null>(null);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [sales, setSales] = useState<SaleItem[]>([]);
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,15 +31,17 @@ export default function LaporanPage() {
   const fetchReportData = async (selectedPeriod: string) => {
     try {
       setLoading(true);
-      const [resDash, resSales, resExp] = await Promise.all([
+      const [resDash, resSales, resExp, resPartners] = await Promise.all([
         fetch(`/api/dashboard?period=${selectedPeriod}`),
         fetch('/api/sales'),
         fetch('/api/expenses'),
+        fetch('/api/partners'),
       ]);
 
       const jsonDash = await resDash.json();
       const jsonSales = await resSales.json();
       const jsonExp = await resExp.json();
+      const jsonPartners = await resPartners.json();
 
       if (jsonDash.success && jsonDash.data) {
         setData(jsonDash.data);
@@ -48,6 +51,9 @@ export default function LaporanPage() {
       }
       if (jsonExp.success && jsonExp.data) {
         setExpenses(jsonExp.data);
+      }
+      if (jsonPartners.success && jsonPartners.data) {
+        setPartners(jsonPartners.data);
       }
     } catch (err) {
       console.error('Error fetching report data:', err);
@@ -123,7 +129,7 @@ export default function LaporanPage() {
                   <span>Print View</span>
                 </button>
                 <button
-                  onClick={() => generateMonthlyReportPDF(data)}
+                  onClick={() => generateMonthlyReportPDF(data, partners)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#D9531E] hover:bg-orange-700 rounded-xl transition-all shadow-xs"
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -237,11 +243,11 @@ export default function LaporanPage() {
                   <span className="tabular-nums text-emerald-700">{formatIDR(data.netProfit)}</span>
                 </div>
                 <div className="flex justify-between text-xs text-emerald-800 font-semibold pt-2 border-t border-emerald-200/80">
-                  <span>Porsi Mitra 1 - Kurniawan (50%):</span>
+                  <span>Porsi {partners[0]?.name || 'Mitra 1'} ({partners[0]?.sharePercent ?? 50}%):</span>
                   <span className="tabular-nums">{formatIDR(data.profitSharePerPartner)}</span>
                 </div>
                 <div className="flex justify-between text-xs text-emerald-800 font-semibold">
-                  <span>Porsi Mitra 2 - Santoso (50%):</span>
+                  <span>Porsi {partners[1]?.name || 'Mitra 2'} ({partners[1]?.sharePercent ?? 50}%):</span>
                   <span className="tabular-nums">{formatIDR(data.profitSharePerPartner)}</span>
                 </div>
               </div>

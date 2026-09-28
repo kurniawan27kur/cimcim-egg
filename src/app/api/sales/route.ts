@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       paymentStatus,
       paymentMethod,
       notes,
-      createdBy: user?.name || 'Kurniawan',
+      createdBy: user?.name || 'Mitra',
     });
 
     return NextResponse.json({ success: true, data: newSale });

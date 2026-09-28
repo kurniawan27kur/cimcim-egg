@@ -24,6 +24,7 @@ import {
 export default function BagiHasilPage() {
   const [period, setPeriod] = useState('2026-09');
   const [data, setData] = useState<DashboardSummary | null>(null);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<Partner | null>(null);
   const [isApproveOpen, setIsApproveOpen] = useState(false);
@@ -43,6 +44,18 @@ export default function BagiHasilPage() {
     }
   };
 
+  const fetchPartners = async () => {
+    try {
+      const res = await fetch('/api/partners');
+      const json = await res.json();
+      if (json.success && json.data) {
+        setPartners(json.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const res = await fetch('/api/auth/me');
@@ -55,6 +68,7 @@ export default function BagiHasilPage() {
 
   useEffect(() => {
     fetchReportData(period);
+    fetchPartners();
     fetchCurrentUser();
   }, [period]);
 
@@ -62,6 +76,22 @@ export default function BagiHasilPage() {
 
   const report = data.currentReport;
   const isFullyLocked = report.status === 'LOCKED';
+
+  const p1 = partners[0] || {
+    id: 'partner-1',
+    name: report.partner1ApprovedBy || 'Mitra 1',
+    role: 'Owner' as const,
+    sharePercent: 50,
+    avatarColor: '#D9531E',
+  };
+
+  const p2 = partners[1] || {
+    id: 'partner-2',
+    name: report.partner2ApprovedBy || 'Mitra 2',
+    role: 'Partner' as const,
+    sharePercent: 50,
+    avatarColor: '#0284C7',
+  };
 
   return (
     <div className="min-h-screen flex bg-[#F8F9FA] text-slate-900">
@@ -182,15 +212,18 @@ export default function BagiHasilPage() {
             <div className="bg-white rounded-2xl p-6 border border-orange-200/80 shadow-2xs space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-[#D9531E] font-bold">
-                    K
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold"
+                    style={{ backgroundColor: p1.avatarColor || '#D9531E' }}
+                  >
+                    {p1.name ? p1.name.charAt(0).toUpperCase() : 'M'}
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-slate-900">Partner 1 (Kurniawan)</h3>
-                    <p className="text-xs text-slate-500">Porsi 50% dari Laba Bersih</p>
+                    <h3 className="font-bold text-base text-slate-900">{p1.name} ({p1.role || 'Owner'})</h3>
+                    <p className="text-xs text-slate-500">Porsi {p1.sharePercent || 50}% dari Laba Bersih</p>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-100 text-orange-800">50%</span>
+                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-100 text-orange-800">{p1.sharePercent || 50}%</span>
               </div>
 
               <div className="p-4 bg-orange-50/70 rounded-xl border border-orange-100">
@@ -201,19 +234,19 @@ export default function BagiHasilPage() {
               </div>
 
               <div className="pt-2 border-t border-slate-100">
-                <p className="text-xs font-semibold text-slate-600 mb-2">Tandatangan Digital Mitra 1:</p>
+                <p className="text-xs font-semibold text-slate-600 mb-2">Tandatangan Digital {p1.name}:</p>
                 {report.partner1Approved ? (
                   <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-xs text-emerald-800">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <div>
-                      <p className="font-bold">Disetujui secara digital oleh Kurniawan</p>
+                      <p className="font-bold">Disetujui secara digital oleh {report.partner1ApprovedBy || p1.name}</p>
                       <p className="text-[10px] text-emerald-600 opacity-90">{formatDateTimeID(report.partner1ApprovedAt)}</p>
                     </div>
                   </div>
                 ) : (
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5 text-xs text-slate-500">
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
-                    <span>Menunggu otorisasi & tanda tangan digital Mitra 1</span>
+                    <span>Menunggu otorisasi & tanda tangan digital {p1.name}</span>
                   </div>
                 )}
               </div>
@@ -223,15 +256,18 @@ export default function BagiHasilPage() {
             <div className="bg-white rounded-2xl p-6 border border-sky-200/80 shadow-2xs space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 font-bold">
-                    S
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold"
+                    style={{ backgroundColor: p2.avatarColor || '#0284C7' }}
+                  >
+                    {p2.name ? p2.name.charAt(0).toUpperCase() : 'M'}
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-slate-900">Partner 2 (Santoso)</h3>
-                    <p className="text-xs text-slate-500">Porsi 50% dari Laba Bersih</p>
+                    <h3 className="font-bold text-base text-slate-900">{p2.name} ({p2.role || 'Partner'})</h3>
+                    <p className="text-xs text-slate-500">Porsi {p2.sharePercent || 50}% dari Laba Bersih</p>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-100 text-sky-800">50%</span>
+                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-100 text-sky-800">{p2.sharePercent || 50}%</span>
               </div>
 
               <div className="p-4 bg-sky-50/70 rounded-xl border border-sky-100">
@@ -242,19 +278,19 @@ export default function BagiHasilPage() {
               </div>
 
               <div className="pt-2 border-t border-slate-100">
-                <p className="text-xs font-semibold text-slate-600 mb-2">Tandatangan Digital Mitra 2:</p>
+                <p className="text-xs font-semibold text-slate-600 mb-2">Tandatangan Digital {p2.name}:</p>
                 {report.partner2Approved ? (
                   <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-xs text-emerald-800">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <div>
-                      <p className="font-bold">Disetujui secara digital oleh Santoso</p>
+                      <p className="font-bold">Disetujui secara digital oleh {report.partner2ApprovedBy || p2.name}</p>
                       <p className="text-[10px] text-emerald-600 opacity-90">{formatDateTimeID(report.partner2ApprovedAt)}</p>
                     </div>
                   </div>
                 ) : (
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5 text-xs text-slate-500">
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
-                    <span>Menunggu otorisasi & tanda tangan digital Mitra 2</span>
+                    <span>Menunggu otorisasi & tanda tangan digital {p2.name}</span>
                   </div>
                 )}
               </div>

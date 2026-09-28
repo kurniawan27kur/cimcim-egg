@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Receipt, Loader2 } from 'lucide-react';
 import { formatIDR } from '@/lib/utils';
-import { ExpenseCategory, AssetClassification } from '@/types';
+import { ExpenseCategory, AssetClassification, Partner } from '@/types';
 
 interface AddExpenseModalProps {
   isOpen: boolean;
@@ -14,6 +14,7 @@ interface AddExpenseModalProps {
 export default function AddExpenseModal({ isOpen, onClose, onSuccess }: AddExpenseModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [partners, setPartners] = useState<Partner[]>([]);
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [category, setCategory] = useState<ExpenseCategory>('Pakan');
@@ -26,6 +27,20 @@ export default function AddExpenseModal({ isOpen, onClose, onSuccess }: AddExpen
   const [payerPartnerId, setPayerPartnerId] = useState('partner-1');
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER_BANK');
   const [notes, setNotes] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/partners')
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.data && json.data.length > 0) {
+            setPartners(json.data);
+            setPayerPartnerId(json.data[0].id);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -238,8 +253,17 @@ export default function AddExpenseModal({ isOpen, onClose, onSuccess }: AddExpen
                 onChange={(e) => setPayerPartnerId(e.target.value)}
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none"
               >
-                <option value="partner-1">Partner 1 (Kurniawan)</option>
-                <option value="partner-2">Partner 2 (Santoso)</option>
+                {partners.map((p, idx) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.role || `Mitra ${idx + 1}`})
+                  </option>
+                ))}
+                {partners.length === 0 && (
+                  <>
+                    <option value="partner-1">Mitra 1</option>
+                    <option value="partner-2">Mitra 2</option>
+                  </>
+                )}
                 <option value="KAS_USAHA">Kas Usaha Bersama</option>
               </select>
             </div>

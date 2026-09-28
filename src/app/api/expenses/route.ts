@@ -59,7 +59,7 @@ export async function POST(req: Request) {
       paymentStatus,
       evidenceUrl,
       notes,
-      createdBy: user?.name || 'Kurniawan',
+      createdBy: user?.name || 'Mitra',
     });
 
     return NextResponse.json({ success: true, data: newExpense });
